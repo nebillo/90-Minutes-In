@@ -28,6 +28,7 @@
 		3D2B0B681306D61A002BD38A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B671306D61A002BD38A /* SystemConfiguration.framework */; };
 		3D2B0B6C1306D626002BD38A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B6B1306D626002BD38A /* MobileCoreServices.framework */; };
 		3D2B0B701306D64F002BD38A /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B6F1306D64F002BD38A /* libz.1.2.3.dylib */; };
+		3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B8A1306D768002BD38A /* NMUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,8 @@
 		3D2B0B671306D61A002BD38A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3D2B0B6B1306D626002BD38A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		3D2B0B6F1306D64F002BD38A /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
+		3D2B0B891306D768002BD38A /* NMUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUser.h; sourceTree = "<group>"; };
+		3D2B0B8A1306D768002BD38A /* NMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUser.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				3D2B0AE81306D17E002BD38A /* Model */,
+				3D2B0B901306D818002BD38A /* Services */,
 				3D2B0AE71306D17B002BD38A /* Controller */,
 			);
 			path = Classes;
@@ -168,6 +172,8 @@
 		3D2B0AE81306D17E002BD38A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3D2B0B891306D768002BD38A /* NMUser.h */,
+				3D2B0B8A1306D768002BD38A /* NMUser.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -230,6 +236,13 @@
 				3D2B0B611306D5FA002BD38A /* Reachability.m */,
 			);
 			path = Reachability;
+			sourceTree = "<group>";
+		};
+		3D2B0B901306D818002BD38A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,6 +319,7 @@
 				3D2B0B5D1306D5B2002BD38A /* ASIInputStream.m in Sources */,
 				3D2B0B5E1306D5B2002BD38A /* ASINetworkQueue.m in Sources */,
 				3D2B0B621306D5FA002BD38A /* Reachability.m in Sources */,
+				3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
