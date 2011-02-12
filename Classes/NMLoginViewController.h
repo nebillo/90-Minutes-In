@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NMAuthenticationManager.h"
 
 
-@interface NMLoginViewController : UIViewController {
-
+@interface NMLoginViewController : UIViewController <NMAuthenticationManagerDelegate, UITextFieldDelegate> 
+{
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *usernameField;
