@@ -30,6 +30,7 @@
 		3D2B0B701306D64F002BD38A /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B6F1306D64F002BD38A /* libz.1.2.3.dylib */; };
 		3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B8A1306D768002BD38A /* NMUser.m */; };
 		3D2B0BB41306D99E002BD38A /* NMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0BB31306D99E002BD38A /* NMRequest.m */; };
+		3D2B0BD41306DB51002BD38A /* NMAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0BD31306DB51002BD38A /* NMAuthenticationManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,8 @@
 		3D2B0B8A1306D768002BD38A /* NMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUser.m; sourceTree = "<group>"; };
 		3D2B0BB21306D99E002BD38A /* NMRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMRequest.h; sourceTree = "<group>"; };
 		3D2B0BB31306D99E002BD38A /* NMRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMRequest.m; sourceTree = "<group>"; };
+		3D2B0BD21306DB51002BD38A /* NMAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMAuthenticationManager.h; sourceTree = "<group>"; };
+		3D2B0BD31306DB51002BD38A /* NMAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMAuthenticationManager.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -246,6 +249,8 @@
 			children = (
 				3D2B0BB21306D99E002BD38A /* NMRequest.h */,
 				3D2B0BB31306D99E002BD38A /* NMRequest.m */,
+				3D2B0BD21306DB51002BD38A /* NMAuthenticationManager.h */,
+				3D2B0BD31306DB51002BD38A /* NMAuthenticationManager.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -326,6 +331,7 @@
 				3D2B0B621306D5FA002BD38A /* Reachability.m in Sources */,
 				3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */,
 				3D2B0BB41306D99E002BD38A /* NMRequest.m in Sources */,
+				3D2B0BD41306DB51002BD38A /* NMAuthenticationManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
