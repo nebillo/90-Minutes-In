@@ -29,6 +29,7 @@
 		3D2B0B6C1306D626002BD38A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B6B1306D626002BD38A /* MobileCoreServices.framework */; };
 		3D2B0B701306D64F002BD38A /* libz.1.2.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2B0B6F1306D64F002BD38A /* libz.1.2.3.dylib */; };
 		3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B8A1306D768002BD38A /* NMUser.m */; };
+		3D2B0BB41306D99E002BD38A /* NMRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0BB31306D99E002BD38A /* NMRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,8 @@
 		3D2B0B6F1306D64F002BD38A /* libz.1.2.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.3.dylib; path = usr/lib/libz.1.2.3.dylib; sourceTree = SDKROOT; };
 		3D2B0B891306D768002BD38A /* NMUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUser.h; sourceTree = "<group>"; };
 		3D2B0B8A1306D768002BD38A /* NMUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUser.m; sourceTree = "<group>"; };
+		3D2B0BB21306D99E002BD38A /* NMRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMRequest.h; sourceTree = "<group>"; };
+		3D2B0BB31306D99E002BD38A /* NMRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMRequest.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -241,6 +244,8 @@
 		3D2B0B901306D818002BD38A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D2B0BB21306D99E002BD38A /* NMRequest.h */,
+				3D2B0BB31306D99E002BD38A /* NMRequest.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 				3D2B0B5E1306D5B2002BD38A /* ASINetworkQueue.m in Sources */,
 				3D2B0B621306D5FA002BD38A /* Reachability.m in Sources */,
 				3D2B0B8B1306D768002BD38A /* NMUser.m in Sources */,
+				3D2B0BB41306D99E002BD38A /* NMRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
