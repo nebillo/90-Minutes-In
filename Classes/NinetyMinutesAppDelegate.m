@@ -8,6 +8,9 @@
 
 #import "NinetyMinutesAppDelegate.h"
 #import "NMRootViewController.h"
+#import "NMLoginViewController.h"
+
+#import "NMAuthenticationManager.h"
 
 
 @implementation NinetyMinutesAppDelegate
@@ -24,8 +27,14 @@
     // Override point for customization after application launch.
     
     // Add the navigation controller's view to the window and display.
-    [window addSubview:navigationController.view];
-    [window makeKeyAndVisible];
+    [self.window addSubview:self.navigationController.view];
+    [self.window makeKeyAndVisible];
+	
+	if ([[NMAuthenticationManager sharedManager] isSessionValid]) {
+		[self showRootController];
+	} else {
+		[self showLoginController];
+	}
 
     return YES;
 }
@@ -66,6 +75,20 @@
      Called when the application is about to terminate.
      See also applicationDidEnterBackground:.
      */
+}
+
+
+- (void)showLoginController {
+	NMLoginViewController *controller = [[[NMLoginViewController alloc] init] autorelease];
+	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+	[self.navigationController presentModalViewController:nav animated:YES];
+}
+
+
+- (void)showRootController {
+	NMRootViewController *controller = [[[NMRootViewController alloc] init] autorelease];
+	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+	[self.navigationController pushViewController:nav animated:NO];
 }
 
 

@@ -11,6 +11,13 @@
 
 @implementation NMRootViewController
 
+- (id)init {
+    if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
+        // Custom initialization
+    }
+    return self;
+}
+
 
 #pragma mark -
 #pragma mark View lifecycle

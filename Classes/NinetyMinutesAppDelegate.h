@@ -8,14 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NinetyMinutesAppDelegate : NSObject <UIApplicationDelegate> {
-    
-    UIWindow *window;
-    UINavigationController *navigationController;
+@interface NinetyMinutesAppDelegate : NSObject <UIApplicationDelegate> 
+{
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
+
+- (void)showLoginController;
+- (void)showRootController;
 
 @end
 
