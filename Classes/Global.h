@@ -10,5 +10,4 @@
 
 
 extern NSString * const kAPIRootURL;
-extern NSString * const kAPIConsumerKey;
-extern NSString * const kAPIConsumerSecret;
+extern NSString * const kFacebookAppId;

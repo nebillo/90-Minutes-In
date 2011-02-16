@@ -9,6 +9,5 @@
 #import "Global.h"
 
 
-NSString * const kAPIRootURL = @"http://smood.it"; 
-NSString * const kAPIConsumerKey = @"QPCG8XWtgbCf0hgrp0m8";
-NSString * const kAPIConsumerSecret = @"TmtYxixWvrvm9r9Y3h5Mh7nUjotmcM2PTrzFwgam";
+NSString * const kAPIRootURL = @"http://90minutesin.appspot.com/api";
+NSString * const kFacebookAppId = @"152318558158118";
