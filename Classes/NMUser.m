@@ -11,21 +11,40 @@
 
 @implementation NMUser
 
+- (id)initWithDictionary:(NSDictionary *)dictionary {
+	if (self = [super init]) {
+		self.identifier = [dictionary objectForKey:@"id"];
+		self.facebookId = [dictionary objectForKey:@"facebook_id"];
+		self.name = [dictionary objectForKey:@"name"];
+		self.firstName = [dictionary objectForKey:@"first_name"];
+		self.lastName = [dictionary objectForKey:@"last_name"];
+		self.picture = [dictionary objectForKey:@"picture"];
+	}
+	return self;
+}
+
+
 #pragma mark -
 #pragma mark NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)coder {
 	[coder encodeObject:self.identifier forKey:@"identifier"];
-	[coder encodeObject:self.username forKey:@"username"];
-	[coder encodeObject:self.fullname forKey:@"fullname"];
+	[coder encodeObject:self.facebookId forKey:@"facebook_id"];
+	[coder encodeObject:self.name forKey:@"name"];
+	[coder encodeObject:self.lastName forKey:@"last_name"];
+	[coder encodeObject:self.firstName forKey:@"first_name"];
+	[coder encodeObject:self.picture forKey:@"picture"];
 }
 
 
 - (id)initWithCoder:(NSCoder *)decoder {
 	if (self = [super init]) {
 		[self setIdentifier:[decoder decodeObjectForKey:@"identifier"]];
-		[self setUsername:[decoder decodeObjectForKey:@"username"]];
-		[self setFullname:[decoder decodeObjectForKey:@"fullname"]];
+		[self setFacebookId:[decoder decodeObjectForKey:@"facebook_id"]];
+		[self setName:[decoder decodeObjectForKey:@"name"]];
+		[self setLastName:[decoder decodeObjectForKey:@"last_name"]];
+		[self setFirstName:[decoder decodeObjectForKey:@"first_name"]];
+		[self setPicture:[decoder decodeObjectForKey:@"picture"]];
 	}
 	return self;
 }
@@ -36,14 +55,20 @@
 
 - (void)dealloc {
 	self.identifier = nil;
-	self.username = nil;
-	self.fullname = nil;
+	self.facebookId = nil;
+	self.name = nil;
+	self.lastName = nil;
+	self.firstName = nil;
+	self.picture = nil;
 	[super dealloc];
 }
 
 
 @synthesize identifier;
-@synthesize username;
-@synthesize fullname;
+@synthesize facebookId;
+@synthesize name;
+@synthesize lastName;
+@synthesize firstName;
+@synthesize picture;
 
 @end

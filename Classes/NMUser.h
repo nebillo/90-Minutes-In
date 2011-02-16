@@ -14,7 +14,12 @@
 }
 
 @property (nonatomic, copy) NSString *identifier;
-@property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *fullname;
+@property (nonatomic, copy) NSString *facebookId;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *firstName;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *picture;
+
+- (id)initWithDictionary:(NSDictionary *)dictionary;
 
 @end
