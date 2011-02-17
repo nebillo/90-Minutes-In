@@ -8,14 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import "NMUser.h"
+#import "Facebook.h"
+
+@class ASINetworkQueue;
+
+
+extern NSString * const kNMFacebookDomain;
 
 
 @protocol NMAuthenticationManagerDelegate;
 
 
-@interface NMAuthenticationManager : NSObject
+@interface NMAuthenticationManager : NSObject <FBSessionDelegate, FBRequestDelegate>
 {
 	id _delegate;
+	Facebook *_facebookManager;
+	ASINetworkQueue *_networkQueue;
 }
 
 @property (nonatomic, assign) id<NMAuthenticationManagerDelegate> delegate;
@@ -26,7 +34,8 @@
 - (NMUser *)authenticatedUser;
 - (void)clearSession;
 
-- (void)loginWithUserName:(NSString *)username password:(NSString *)password;
+// authenticate with facebook
+- (void)connectWithFacebookAppId:(NSString *)appId;
 
 @end
 
@@ -35,7 +44,7 @@
 
 @optional
 
-- (void)authenticationManager:(NMAuthenticationManager *)manager didLoginUser:(NMUser *)user;
-- (void)authenticationManager:(NMAuthenticationManager *)manager didFailLoginUserWithError:(NSError *)error;
+- (void)authenticationManager:(NMAuthenticationManager *)manager didConnectUser:(NMUser *)user;
+- (void)authenticationManager:(NMAuthenticationManager *)manager didFailConnectUserWithError:(NSError *)error;
 
 @end
