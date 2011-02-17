@@ -10,15 +10,12 @@
 #import "NMAuthenticationManager.h"
 
 
-@interface NMLoginViewController : UIViewController <NMAuthenticationManagerDelegate, UITextFieldDelegate> 
+@interface NMLoginViewController : UIViewController <NMAuthenticationManagerDelegate> 
 {
 }
 
-@property (nonatomic, retain) IBOutlet UITextField *usernameField;
-@property (nonatomic, retain) IBOutlet UITextField *passwordField;
 @property (nonatomic, retain) IBOutlet UIButton *signinButton;
 
 - (IBAction)signin;
-- (IBAction)signup;
 
 @end
