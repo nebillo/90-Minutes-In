@@ -86,7 +86,8 @@
 
 
 - (void)showRootController {
-	NMRootViewController *controller = [[[NMRootViewController alloc] init] autorelease];
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	NMRootViewController *controller = [[(NMRootViewController *)[NMRootViewController alloc] initWithUser:user] autorelease];
 	[self.navigationController pushViewController:controller animated:NO];
 }
 

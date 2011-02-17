@@ -9,11 +9,17 @@
 #import "NMRootViewController.h"
 
 
+@interface NMRootViewController ()
+
+@end
+
+
 @implementation NMRootViewController
 
-- (id)init {
+- (id)initWithUser:(NMUser *)user {
     if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
         // Custom initialization
+		self.user = user;
     }
     return self;
 }
@@ -22,20 +28,17 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-/*
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", self.user.firstName]];
 }
-*/
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
-*/
+
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -59,6 +62,10 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
  */
+
+- (IBAction)updateStatus {
+	[self.statusControl setEnabled:NO];
+}
 
 
 #pragma mark -
@@ -161,16 +168,24 @@
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 	self.tableView = nil;
+	self.statusControl = nil;
+	self.userLabel = nil;
 }
 
 
 - (void)dealloc {
+	self.user = nil;
 	self.tableView = nil;
+	self.statusControl = nil;
+	self.userLabel = nil;
     [super dealloc];
 }
 
 
 @synthesize tableView;
+@synthesize statusControl;
+@synthesize userLabel;
+@synthesize user;
 
 @end
 
