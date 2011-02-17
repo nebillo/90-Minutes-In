@@ -7,9 +7,12 @@
 //
 
 #import "NMRootViewController.h"
+#import "NMStatusUpdate.h"
 
 
 @interface NMRootViewController ()
+
+- (void)updateWithStatus:(NMStatusUpdate *)status;
 
 @end
 
@@ -30,7 +33,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", self.user.firstName]];
+	[self updateWithStatus:self.user.lastStatus];
 }
 
 
@@ -68,6 +73,23 @@
 }
 
 
+- (void)updateWithStatus:(NMStatusUpdate *)status {
+	if (!status || status.expired) {
+		// no status or status is expired
+		[self.statusControl setEnabled:YES];
+		[self.statusControl setSelected:NO];
+	} else {
+		// there is a valid status
+		[self.statusControl setEnabled:NO];
+		if (status.status == NMStatusIn) {
+			[self.statusControl setSelectedSegmentIndex:0];
+		} else {
+			[self.statusControl setSelectedSegmentIndex:1];
+		}
+	}
+}
+
+
 #pragma mark -
 #pragma mark Table view data source
 
@@ -99,46 +121,6 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark -
 #pragma mark Table view delegate
 
@@ -157,16 +139,7 @@
 #pragma mark -
 #pragma mark Memory management
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
-}
-
 - (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
 	self.tableView = nil;
 	self.statusControl = nil;
 	self.userLabel = nil;

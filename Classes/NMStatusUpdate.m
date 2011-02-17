@@ -45,6 +45,11 @@
 }
 
 
+- (BOOL)isExpired {
+	return [self.expirationDate timeIntervalSinceNow] > 0;
+}
+
+
 @synthesize identifier;
 @synthesize status;
 @synthesize createdAt;

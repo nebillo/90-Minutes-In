@@ -28,5 +28,6 @@ typedef enum {
 @property (nonatomic, retain) NSDate *expirationDate;
 @property (nonatomic, retain) CLLocation *location;
 @property (nonatomic, copy) NSString *address;
+@property (nonatomic, readonly, getter = isExpired) BOOL expired;
 
 @end
