@@ -7,6 +7,7 @@
 //
 
 #import "NMUser.h"
+#import "NMStatusUpdate.h"
 
 
 @implementation NMUser
@@ -20,6 +21,10 @@
 		self.lastName = [dictionary objectForKey:@"last_name"];
 		self.picture = [dictionary objectForKey:@"picture"];
 		self.accessToken = [dictionary objectForKey:@"access_token"];
+		
+		if ([dictionary objectForKey:@"status"]) {
+			self.lastStatus = [[[NMStatusUpdate alloc] initWithDictionary:[dictionary objectForKey:@"status"]] autorelease];
+		}
 	}
 	return self;
 }
@@ -64,6 +69,7 @@
 	self.firstName = nil;
 	self.picture = nil;
 	self.accessToken = nil;
+	self.lastStatus = nil;
 	[super dealloc];
 }
 
@@ -75,5 +81,6 @@
 @synthesize firstName;
 @synthesize picture;
 @synthesize accessToken;
+@synthesize lastStatus;
 
 @end

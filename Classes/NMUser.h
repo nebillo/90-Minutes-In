@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class NMStatusUpdate;
+
 
 @interface NMUser : NSObject <NSCoding>
 {
@@ -20,6 +22,7 @@
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
 @property (nonatomic, copy) NSString *picture;
+@property (nonatomic, retain) NMStatusUpdate *lastStatus;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
