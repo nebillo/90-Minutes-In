@@ -87,8 +87,7 @@
 
 - (void)showRootController {
 	NMRootViewController *controller = [[[NMRootViewController alloc] init] autorelease];
-	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-	[self.navigationController pushViewController:nav animated:NO];
+	[self.navigationController pushViewController:controller animated:NO];
 }
 
 
