@@ -10,6 +10,7 @@
 
 #import "ASIHTTPRequest.h"
 #import "ASINetworkQueue.h"
+#import "JSON.h"
 
 
 NSString * const kNMRequestDomain = @"com.ninetyminutes.httpRequest";
@@ -101,7 +102,7 @@ NSString * const kNMRequestDomain = @"com.ninetyminutes.httpRequest";
 
 - (id)createResponseForMainRequest:(ASIHTTPRequest *)request {
 	// overwrite in subclasses
-	return [request responseString];
+	return [request JSONRepresentation];
 }
 
 
