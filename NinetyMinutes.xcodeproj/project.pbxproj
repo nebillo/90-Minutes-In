@@ -17,6 +17,7 @@
 		28F335F11007B36200424DE2 /* NMRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* NMRootViewController.xib */; };
 		3D295F91130DBAD600E81456 /* NMStatusUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D295F90130DBAD600E81456 /* NMStatusUpdate.m */; };
 		3D295F9F130DBB8500E81456 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D295F9E130DBB8500E81456 /* CoreLocation.framework */; };
+		3D295FD6130DC52300E81456 /* NMUpdateStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D295FD5130DC52300E81456 /* NMUpdateStatusRequest.m */; };
 		3D2B0B571306D5B2002BD38A /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B441306D5B2002BD38A /* ASIAuthenticationDialog.m */; };
 		3D2B0B581306D5B2002BD38A /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B471306D5B2002BD38A /* ASIDataCompressor.m */; };
 		3D2B0B591306D5B2002BD38A /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0B491306D5B2002BD38A /* ASIDataDecompressor.m */; };
@@ -65,6 +66,8 @@
 		3D295F8F130DBAD600E81456 /* NMStatusUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMStatusUpdate.h; sourceTree = "<group>"; };
 		3D295F90130DBAD600E81456 /* NMStatusUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMStatusUpdate.m; sourceTree = "<group>"; };
 		3D295F9E130DBB8500E81456 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		3D295FD4130DC52300E81456 /* NMUpdateStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUpdateStatusRequest.h; sourceTree = "<group>"; };
+		3D295FD5130DC52300E81456 /* NMUpdateStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUpdateStatusRequest.m; sourceTree = "<group>"; };
 		3D2B0B431306D5B2002BD38A /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		3D2B0B441306D5B2002BD38A /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		3D2B0B451306D5B2002BD38A /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -304,6 +307,8 @@
 				3D2B0BB31306D99E002BD38A /* NMRequest.m */,
 				3D2B0BD21306DB51002BD38A /* NMAuthenticationManager.h */,
 				3D2B0BD31306DB51002BD38A /* NMAuthenticationManager.m */,
+				3D295FD4130DC52300E81456 /* NMUpdateStatusRequest.h */,
+				3D295FD5130DC52300E81456 /* NMUpdateStatusRequest.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -461,6 +466,7 @@
 				3D57B40D130C8ED000073D3C /* SBJsonParser.m in Sources */,
 				3D57B40E130C8ED000073D3C /* SBJsonWriter.m in Sources */,
 				3D295F91130DBAD600E81456 /* NMStatusUpdate.m in Sources */,
+				3D295FD6130DC52300E81456 /* NMUpdateStatusRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
