@@ -19,6 +19,7 @@
 		self.firstName = [dictionary objectForKey:@"first_name"];
 		self.lastName = [dictionary objectForKey:@"last_name"];
 		self.picture = [dictionary objectForKey:@"picture"];
+		self.accessToken = [dictionary objectForKey:@"access_token"];
 	}
 	return self;
 }
@@ -34,6 +35,7 @@
 	[coder encodeObject:self.lastName forKey:@"last_name"];
 	[coder encodeObject:self.firstName forKey:@"first_name"];
 	[coder encodeObject:self.picture forKey:@"picture"];
+	[coder encodeObject:self.accessToken forKey:@"access_token"];
 }
 
 
@@ -45,6 +47,7 @@
 		[self setLastName:[decoder decodeObjectForKey:@"last_name"]];
 		[self setFirstName:[decoder decodeObjectForKey:@"first_name"]];
 		[self setPicture:[decoder decodeObjectForKey:@"picture"]];
+		[self setAccessToken:[decoder decodeObjectForKey:@"access_token"]];
 	}
 	return self;
 }
@@ -60,6 +63,7 @@
 	self.lastName = nil;
 	self.firstName = nil;
 	self.picture = nil;
+	self.accessToken = nil;
 	[super dealloc];
 }
 
@@ -70,5 +74,6 @@
 @synthesize lastName;
 @synthesize firstName;
 @synthesize picture;
+@synthesize accessToken;
 
 @end

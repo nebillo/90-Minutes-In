@@ -14,6 +14,7 @@
 }
 
 @property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, copy) NSString *accessToken;
 @property (nonatomic, copy) NSString *facebookId;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *firstName;
