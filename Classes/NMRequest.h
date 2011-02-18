@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @class NMRequest;
 @protocol NMRequestDelegate <NSObject>
 
@@ -22,7 +23,6 @@
 
 @class ASINetworkQueue;
 @class ASIHTTPRequest;
-@class GLUser;
 
 
 extern NSString * const kNMRequestDomain;
