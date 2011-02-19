@@ -39,6 +39,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	[self.navigationItem setTitle:@"90 Minutes In"];
+	
 	[self.tableView setRowHeight:kUserCellHeight];
 	
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", self.user.firstName]];
@@ -99,12 +101,16 @@
 
 
 - (IBAction)updateFriends {
-	[self.view presentLoadingViewWithTitle:@"Updating your friends status…"];
+	[self.view presentLoadingViewWithTitle:@"Updating your friends…"];
 	
 	NMFriendsRequest *update = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
 	[update setUser:self.user];
 	[update start];
+}
+
+
+- (IBAction)filterFriends:(UISegmentedControl *)control {
 }
 
 

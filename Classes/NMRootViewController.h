@@ -27,4 +27,6 @@
 - (IBAction)updateStatus;
 - (IBAction)updateFriends;
 
+- (IBAction)filterFriends:(UISegmentedControl *)control;
+
 @end
