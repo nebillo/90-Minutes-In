@@ -13,6 +13,7 @@
 
 @interface NMRootViewController : UIViewController <NMRequestDelegate>
 {
+	NSArray *_friends;
 }
 
 - (id)initWithUser:(NMUser *)user;
@@ -24,5 +25,6 @@
 
 - (IBAction)getStatus;
 - (IBAction)updateStatus;
+- (IBAction)updateFriends;
 
 @end

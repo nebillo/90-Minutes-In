@@ -10,6 +10,7 @@
 #import "NMStatusUpdate.h"
 #import "NMUpdateStatusRequest.h"
 #import "NMGetStatusRequest.h"
+#import "NMFriendsRequest.h"
 #import "NMViewExtension.h"
 
 
@@ -94,8 +95,18 @@
 }
 
 
+- (IBAction)updateFriends {
+	[self.view presentLoadingViewWithTitle:@"Updating your friends status…"];
+	
+	NMFriendsRequest *update = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
+	[update setDelegate:self];
+	[update setUser:self.user];
+	[update start];
+}
+
+
 - (void)updateWithStatus:(NMStatusUpdate *)status {
-	if (!status || status.expired) {
+	if (!status || (NSNull *)status == [NSNull null] || status.expired) {
 		// no status or status is expired
 		[self.statusControl setEnabled:YES];
 		[self.statusControl setSelected:NO];
@@ -127,24 +138,44 @@
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+	} else if ([request isKindOfClass:[NMFriendsRequest class]]) {
+		[[[[UIAlertView alloc] initWithTitle:@"Update friends error" 
+									 message:[error localizedDescription] 
+									delegate:nil 
+						   cancelButtonTitle:@"Ok" 
+						   otherButtonTitles:nil] autorelease] show];
 	}
 	[self.view dismissStaticView];
 }
 
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
-	NMStatusUpdate *status = (NMStatusUpdate *)response;
-	[self updateWithStatus:status];
+	
+	[self.view dismissStaticView];
 	
 	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
+		
+		NMStatusUpdate *status = (NMStatusUpdate *)response;
+		[self updateWithStatus:status];
+		[self updateFriends];
+		
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
+		
+		NMStatusUpdate *status = (NMStatusUpdate *)response;
+		[self updateWithStatus:status];
 		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
 									 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		
+	} else if ([request isKindOfClass:[NMFriendsRequest class]]) {
+		
+		[_friends release];
+		_friends = [response retain];
+		[self.tableView reloadData];
+		
 	}
-	[self.view dismissStaticView];
 }
 
 
@@ -159,7 +190,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return _friends.count;
 }
 
 
@@ -174,6 +205,8 @@
     }
     
 	// Configure the cell.
+	NMUser *friend = [_friends objectAtIndex:indexPath.row];
+	[cell.textLabel setText:friend.name];
 
     return cell;
 }
@@ -205,6 +238,7 @@
 
 
 - (void)dealloc {
+	[_friends release];
 	self.user = nil;
 	self.tableView = nil;
 	self.statusControl = nil;
