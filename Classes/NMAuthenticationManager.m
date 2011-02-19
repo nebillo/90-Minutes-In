@@ -9,7 +9,8 @@
 #import "NMAuthenticationManager.h"
 #import "ASINetworkQueue.h"
 #import "ASIFormDataRequest.h"
-#import "JSON.h"
+#import "CJSONDeserializer.h"
+#import "CJSONSerializer.h"
 
 
 NSString * const kNMFacebookDomain = @"com.faceboook.connect";
@@ -226,7 +227,7 @@ static NMUser *authenticatedUser = nil;
 	[connectRequest setRequestMethod:@"PUT"];
 	[connectRequest setPostValue:_facebookManager.accessToken forKey:@"facebook_access_token"];
 	[connectRequest setPostValue:[dict objectForKey:@"id"] forKey:@"facebook_id"];
-	[connectRequest setPostValue:[dict JSONRepresentation] forKey:@"facebook_data"];
+	[connectRequest setPostValue:[[CJSONSerializer serializer] serializeObject:dict] forKey:@"facebook_data"];
 	[connectRequest setDelegate:self];
 	[connectRequest setDidFinishSelector:@selector(connectRequestDone:)];
 	[connectRequest setDidFailSelector:@selector(connectRequestFail:)];
@@ -245,7 +246,7 @@ static NMUser *authenticatedUser = nil;
 
 
 - (void)connectRequestDone:(ASIHTTPRequest *)request {
-	NSDictionary *dict = [[request responseString] JSONValue];
+	NSDictionary *dict = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:nil];
 	dict = [dict objectForKey:@"user"];
 	
 	if (!dict) {
