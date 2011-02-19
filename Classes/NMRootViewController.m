@@ -12,6 +12,7 @@
 #import "NMGetStatusRequest.h"
 #import "NMFriendsRequest.h"
 #import "NMViewExtension.h"
+#import "NMUserCell.h"
 
 
 @interface NMRootViewController ()
@@ -37,6 +38,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	[self.tableView setRowHeight:kUserCellHeight];
 	
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", self.user.firstName]];
 	[self updateWithStatus:self.user.lastStatus];
@@ -197,16 +200,14 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    NMUserCell *cell = (NMUserCell *)[tableView dequeueReusableCellWithIdentifier:kUserCellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [NMUserCell cellFromNib];
     }
     
 	// Configure the cell.
 	NMUser *friend = [_friends objectAtIndex:indexPath.row];
-	[cell.textLabel setText:friend.name];
+	[cell setUser:friend];
 
     return cell;
 }

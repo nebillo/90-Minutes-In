@@ -77,6 +77,8 @@
 		3DE51B3E130F48B9004353F3 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B33130F48B9004353F3 /* CJSONSerializer.m */; };
 		3DE51B3F130F48B9004353F3 /* CSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B35130F48B9004353F3 /* CSerializedJSONData.m */; };
 		3DE51B7E130F4B06004353F3 /* NMFriendsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B7D130F4B06004353F3 /* NMFriendsRequest.m */; };
+		3DE51BF1130F552B004353F3 /* NMUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51BF0130F552B004353F3 /* NMUserCell.m */; };
+		3DE51BF7130F564F004353F3 /* NMUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DE51BF6130F564F004353F3 /* NMUserCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -453,6 +455,9 @@
 		3DE51B35130F48B9004353F3 /* CSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSerializedJSONData.m; sourceTree = "<group>"; };
 		3DE51B7C130F4B06004353F3 /* NMFriendsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMFriendsRequest.h; sourceTree = "<group>"; };
 		3DE51B7D130F4B06004353F3 /* NMFriendsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMFriendsRequest.m; sourceTree = "<group>"; };
+		3DE51BEF130F552B004353F3 /* NMUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUserCell.h; sourceTree = "<group>"; };
+		3DE51BF0130F552B004353F3 /* NMUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUserCell.m; sourceTree = "<group>"; };
+		3DE51BF6130F564F004353F3 /* NMUserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NMUserCell.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -755,6 +760,9 @@
 				28C286DF0D94DF7D0034E888 /* NMRootViewController.h */,
 				28C286E00D94DF7D0034E888 /* NMRootViewController.m */,
 				28F335F01007B36200424DE2 /* NMRootViewController.xib */,
+				3DE51BEF130F552B004353F3 /* NMUserCell.h */,
+				3DE51BF0130F552B004353F3 /* NMUserCell.m */,
+				3DE51BF6130F564F004353F3 /* NMUserCell.xib */,
 			);
 			name = Root;
 			sourceTree = "<group>";
@@ -1164,6 +1172,7 @@
 				3D2B0BFC1306DFA0002BD38A /* NMLoginViewController.xib in Resources */,
 				3D57B405130C8ED000073D3C /* FBDialog.bundle in Resources */,
 				3DE51A3B130F3931004353F3 /* NMViewExtension.xib in Resources */,
+				3DE51BF7130F564F004353F3 /* NMUserCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,6 +1231,7 @@
 				3DE51B3E130F48B9004353F3 /* CJSONSerializer.m in Sources */,
 				3DE51B3F130F48B9004353F3 /* CSerializedJSONData.m in Sources */,
 				3DE51B7E130F4B06004353F3 /* NMFriendsRequest.m in Sources */,
+				3DE51BF1130F552B004353F3 /* NMUserCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
