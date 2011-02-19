@@ -34,8 +34,9 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 		_user = [user retain];
 		
 		[self.nameLabel setText:user.name];
-		[self.userPicture setUrlPath:user.picture];
 	}
+	
+	[self.userPicture setUrlPath:user.picture];
 	
 	if (user.lastStatus && !user.lastStatus.expired) {
 		// valid status
@@ -49,8 +50,8 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 		[self.statusImage setHidden:NO];
 		
 		NSTimeInterval interval = [user.lastStatus.expirationDate timeIntervalSinceNow];
-		int minutes = round(interval / 60.0);
-		[self.statusDate setText:[NSString stringWithFormat:@"still %d minutes", minutes]];
+		int minutes = ceil(interval / 60.0);
+		[self.statusDate setText:[NSString stringWithFormat:@"%@ for %d more minutes", user.lastStatus.status, minutes]];
 		[self.statusDate setHidden:NO];
 	} else {
 		// invalid status
