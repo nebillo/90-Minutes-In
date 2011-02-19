@@ -65,6 +65,7 @@
 		3DE519D5130F37D6004353F3 /* ASIHTTPRequest+Signature.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE519D4130F37D6004353F3 /* ASIHTTPRequest+Signature.m */; };
 		3DE51A3A130F3931004353F3 /* NMViewExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51A38130F3931004353F3 /* NMViewExtension.m */; };
 		3DE51A3B130F3931004353F3 /* NMViewExtension.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DE51A39130F3931004353F3 /* NMViewExtension.xib */; };
+		3DE51AD2130F4455004353F3 /* NMGetStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51AD1130F4455004353F3 /* NMGetStatusRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -417,6 +418,8 @@
 		3DE51A37130F3931004353F3 /* NMViewExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMViewExtension.h; sourceTree = "<group>"; };
 		3DE51A38130F3931004353F3 /* NMViewExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMViewExtension.m; sourceTree = "<group>"; };
 		3DE51A39130F3931004353F3 /* NMViewExtension.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NMViewExtension.xib; sourceTree = "<group>"; };
+		3DE51AD0130F4455004353F3 /* NMGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMGetStatusRequest.h; sourceTree = "<group>"; };
+		3DE51AD1130F4455004353F3 /* NMGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMGetStatusRequest.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -694,6 +697,8 @@
 				3D2B0BD31306DB51002BD38A /* NMAuthenticationManager.m */,
 				3D295FD4130DC52300E81456 /* NMUpdateStatusRequest.h */,
 				3D295FD5130DC52300E81456 /* NMUpdateStatusRequest.m */,
+				3DE51AD0130F4455004353F3 /* NMGetStatusRequest.h */,
+				3DE51AD1130F4455004353F3 /* NMGetStatusRequest.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -1126,6 +1131,7 @@
 				3DE519B0130F357A004353F3 /* ISO8601DateFormatter.m in Sources */,
 				3DE519D5130F37D6004353F3 /* ASIHTTPRequest+Signature.m in Sources */,
 				3DE51A3A130F3931004353F3 /* NMViewExtension.m in Sources */,
+				3DE51AD2130F4455004353F3 /* NMGetStatusRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

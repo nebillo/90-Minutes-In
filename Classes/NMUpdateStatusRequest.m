@@ -61,7 +61,12 @@
 	
 	NSDictionary *response = [super createResponseForMainRequest:request];
 	response = [response objectForKey:@"status"];
+	if (!response) {
+		return nil;
+	}
+	
 	NMStatusUpdate *status = [[[NMStatusUpdate alloc] initWithDictionary:response] autorelease];
+	[request.signedUser setLastStatus:status];
 	return status;
 }
 
