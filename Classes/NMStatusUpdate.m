@@ -51,7 +51,7 @@ NSString * const kNMStatusIn = @"in";
 
 
 - (BOOL)isExpired {
-	return [self.expirationDate timeIntervalSinceNow] > 0;
+	return [self.expirationDate timeIntervalSinceNow] < 0;
 }
 
 
