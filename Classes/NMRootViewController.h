@@ -22,6 +22,7 @@
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
+- (IBAction)getStatus;
 - (IBAction)updateStatus;
 
 @end

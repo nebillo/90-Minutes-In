@@ -9,6 +9,7 @@
 #import "NMRootViewController.h"
 #import "NMStatusUpdate.h"
 #import "NMUpdateStatusRequest.h"
+#import "NMGetStatusRequest.h"
 #import "NMViewExtension.h"
 
 
@@ -43,6 +44,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	
+	[self getStatus];
 }
 
 
@@ -69,6 +72,16 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
  */
+
+- (IBAction)getStatus {
+	[self.view presentLoadingViewWithTitle:@"Getting your status…"];
+	
+	NMGetStatusRequest *update = [[[NMGetStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
+	[update setDelegate:self];
+	[update setUser:self.user];
+	[update start];
+}
+
 
 - (IBAction)updateStatus {
 	[self.view presentLoadingViewWithTitle:@"Updating your status…"];
@@ -102,11 +115,19 @@
 #pragma mark NMRequestDelegate
 
 - (void)request:(NMRequest *)request didFailWithError:(NSError *)error {
-	[[[[UIAlertView alloc] initWithTitle:@"Update error" 
-								 message:[error localizedDescription] 
-								delegate:nil 
-					   cancelButtonTitle:@"Ok" 
-					   otherButtonTitles:nil] autorelease] show];
+	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
+		[[[[UIAlertView alloc] initWithTitle:@"Get status error" 
+									 message:[error localizedDescription] 
+									delegate:nil 
+						   cancelButtonTitle:@"Ok" 
+						   otherButtonTitles:nil] autorelease] show];
+	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
+		[[[[UIAlertView alloc] initWithTitle:@"Update status error" 
+									 message:[error localizedDescription] 
+									delegate:nil 
+						   cancelButtonTitle:@"Ok" 
+						   otherButtonTitles:nil] autorelease] show];
+	}
 	[self.view dismissStaticView];
 }
 
@@ -115,11 +136,14 @@
 	NMStatusUpdate *status = (NMStatusUpdate *)response;
 	[self updateWithStatus:status];
 	
-	[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
-								 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
-								delegate:nil 
-					   cancelButtonTitle:@"Ok" 
-					   otherButtonTitles:nil] autorelease] show];
+	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
+	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
+		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
+									 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
+									delegate:nil 
+						   cancelButtonTitle:@"Ok" 
+						   otherButtonTitles:nil] autorelease] show];
+	}
 	[self.view dismissStaticView];
 }
 
