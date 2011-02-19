@@ -7,6 +7,7 @@
 //
 
 #import "NMStatusUpdate.h"
+#import "NSDateAdditions.h"
 
 
 @implementation NMStatusUpdate
@@ -30,6 +31,9 @@
 			self.location = location;
 			self.address = [dict objectForKey:@"address"];
 		}
+		
+		self.createdAt = [NSDate dateWithISOString:[dict objectForKey:@"created_at"]];
+		self.expirationDate = [NSDate dateWithISOString:[dict objectForKey:@"expiration_date"]];
 	}
 	return self;
 }
