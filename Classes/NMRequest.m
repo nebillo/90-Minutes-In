@@ -123,10 +123,11 @@ NSString * const kNMRequestDomain = @"com.ninetyminutes.httpRequest";
 		
 		[self.delegate request:self didFinishWithResponse:response];
 	} else {
-		NSLog(@"request response failure with status: %d, %@: %@", 
+		NSLog(@"request response failure with status: %d, %@: %@\n%@", 
 			  [request responseStatusCode], 
 			  [request requestMethod], 
-			  [request.url absoluteString]);
+			  [request.url absoluteString],
+			  [request responseString]);
 		
 		NSError *error = [self createErrorForResponseOfMainRequest:request];
 		[self.delegate request:self didFailWithError:error];
