@@ -8,6 +8,8 @@
 
 #import "NMUpdateStatusRequest.h"
 #import "NMUser.h"
+#import "NMStatusUpdate.h"
+
 #import "ASIFormDataRequest.h"
 #import "ASIHTTPRequest+Signature.h"
 #import "NMAuthenticationManager.h"
@@ -24,6 +26,7 @@
 
 - (void)dealloc 
 {
+	self.status = nil;
 	self.location = nil;
 	[super dealloc];
 }
@@ -39,8 +42,7 @@
 																  signWithUser:user];
 	[updateRequest setRequestMethod:@"PUT"];
 	
-	[updateRequest setPostValue:self.status == NMStatusIn ? @"in" : @"out" 
-						 forKey:@"status"];
+	[updateRequest setPostValue:self.status forKey:@"status"];
 	
 	if (self.location) {
 		[updateRequest setPostValue:[NSNumber numberWithFloat:self.location.coordinate.latitude] forKey:@"lat"];

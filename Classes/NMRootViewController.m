@@ -8,6 +8,8 @@
 
 #import "NMRootViewController.h"
 #import "NMStatusUpdate.h"
+#import "NMUpdateStatusRequest.h"
+#import "NMViewExtension.h"
 
 
 @interface NMRootViewController ()
@@ -69,7 +71,13 @@
  */
 
 - (IBAction)updateStatus {
+	[self.view presentLoadingViewWithTitle:@"Updating your status…"];
 	[self.statusControl setEnabled:NO];
+	
+	NMUpdateStatusRequest *update = [[[NMUpdateStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
+	[update setDelegate:self];
+	[update setStatus:self.statusControl.selectedSegmentIndex == 0 ? kNMStatusIn : kNMStatusOut];
+	[update start];
 }
 
 
@@ -81,12 +89,38 @@
 	} else {
 		// there is a valid status
 		[self.statusControl setEnabled:NO];
-		if (status.status == NMStatusIn) {
+		if ([status.status isEqualToString:kNMStatusIn]) {
 			[self.statusControl setSelectedSegmentIndex:0];
 		} else {
 			[self.statusControl setSelectedSegmentIndex:1];
 		}
 	}
+}
+
+
+#pragma mark -
+#pragma mark NMRequestDelegate
+
+- (void)request:(NMRequest *)request didFailWithError:(NSError *)error {
+	[[[[UIAlertView alloc] initWithTitle:@"Update error" 
+								 message:[error localizedDescription] 
+								delegate:nil 
+					   cancelButtonTitle:@"Ok" 
+					   otherButtonTitles:nil] autorelease] show];
+	[self.view dismissStaticView];
+}
+
+
+- (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
+	NMStatusUpdate *status = (NMStatusUpdate *)response;
+	[self updateWithStatus:status];
+	
+	[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
+								 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
+								delegate:nil 
+					   cancelButtonTitle:@"Ok" 
+					   otherButtonTitles:nil] autorelease] show];
+	[self.view dismissStaticView];
 }
 
 

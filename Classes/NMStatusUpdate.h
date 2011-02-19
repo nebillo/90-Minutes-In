@@ -10,10 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 
 
-typedef enum {
-	NMStatusOut = 0,
-	NMStatusIn = 1,
-} NMStatus;
+extern NSString * const kNMStatusOut;
+extern NSString * const kNMStatusIn;
 
 
 @interface NMStatusUpdate : NSObject 
@@ -23,7 +21,7 @@ typedef enum {
 - (id)initWithDictionary:(NSDictionary *)dict;
 
 @property (nonatomic, copy) NSString *identifier;
-@property (nonatomic, assign) NMStatus status;
+@property (nonatomic, copy) NSString *status;
 @property (nonatomic, retain) NSDate *createdAt;
 @property (nonatomic, retain) NSDate *expirationDate;
 @property (nonatomic, retain) CLLocation *location;

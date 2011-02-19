@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "NMUser.h"
+#import "NMRequest.h"
 
 
-@interface NMRootViewController : UIViewController 
+@interface NMRootViewController : UIViewController <NMRequestDelegate>
 {
 }
 

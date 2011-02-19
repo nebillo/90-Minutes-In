@@ -7,7 +7,6 @@
 //
 
 #import "NMRequest.h"
-#import "NMStatusUpdate.h"
 
 @class CLLocation;
 
@@ -16,7 +15,7 @@
 {
 }
 
-@property (nonatomic, assign) NMStatus status;
+@property (nonatomic, copy) NSString *status;
 @property (nonatomic, retain) CLLocation *location;
 
 @end

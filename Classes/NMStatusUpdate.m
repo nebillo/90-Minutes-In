@@ -10,18 +10,17 @@
 #import "NSDateAdditions.h"
 
 
+NSString * const kNMStatusOut = @"out";
+NSString * const kNMStatusIn = @"in";
+
+
 @implementation NMStatusUpdate
 
 - (id)initWithDictionary:(NSDictionary *)dict {
 	if (self = [super init]) {
 		self.identifier = [dict objectForKey:@"id"];
 		
-		NSString *status = [dict objectForKey:@"status"];
-		if ([status isEqualToString:@"in"]) {
-			self.status = NMStatusIn;
-		} else {
-			self.status = NMStatusOut;
-		}
+		self.status = [dict objectForKey:@"status"];
 		
 		NSString *location = [dict objectForKey:@"location"];
 		if (location) {
@@ -41,6 +40,7 @@
 
 - (void)dealloc {
 	self.identifier = nil;
+	self.status = nil;
 	self.createdAt = nil;
 	self.expirationDate = nil;
 	self.location = nil;
