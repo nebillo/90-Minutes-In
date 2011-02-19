@@ -76,6 +76,7 @@
 		3DE51B3D130F48B9004353F3 /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B31130F48B9004353F3 /* CJSONScanner.m */; };
 		3DE51B3E130F48B9004353F3 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B33130F48B9004353F3 /* CJSONSerializer.m */; };
 		3DE51B3F130F48B9004353F3 /* CSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B35130F48B9004353F3 /* CSerializedJSONData.m */; };
+		3DE51B7E130F4B06004353F3 /* NMFriendsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51B7D130F4B06004353F3 /* NMFriendsRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -450,6 +451,8 @@
 		3DE51B33130F48B9004353F3 /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
 		3DE51B34130F48B9004353F3 /* CSerializedJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSerializedJSONData.h; sourceTree = "<group>"; };
 		3DE51B35130F48B9004353F3 /* CSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSerializedJSONData.m; sourceTree = "<group>"; };
+		3DE51B7C130F4B06004353F3 /* NMFriendsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMFriendsRequest.h; sourceTree = "<group>"; };
+		3DE51B7D130F4B06004353F3 /* NMFriendsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMFriendsRequest.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* NinetyMinutes-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NinetyMinutes-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -730,6 +733,8 @@
 				3D295FD5130DC52300E81456 /* NMUpdateStatusRequest.m */,
 				3DE51AD0130F4455004353F3 /* NMGetStatusRequest.h */,
 				3DE51AD1130F4455004353F3 /* NMGetStatusRequest.m */,
+				3DE51B7C130F4B06004353F3 /* NMFriendsRequest.h */,
+				3DE51B7D130F4B06004353F3 /* NMFriendsRequest.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -1216,6 +1221,7 @@
 				3DE51B3D130F48B9004353F3 /* CJSONScanner.m in Sources */,
 				3DE51B3E130F48B9004353F3 /* CJSONSerializer.m in Sources */,
 				3DE51B3F130F48B9004353F3 /* CSerializedJSONData.m in Sources */,
+				3DE51B7E130F4B06004353F3 /* NMFriendsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
