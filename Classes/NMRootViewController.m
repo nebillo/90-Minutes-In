@@ -40,6 +40,9 @@
     [super viewDidLoad];
 	
 	[self.navigationItem setTitle:@"90 Minutes In"];
+	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
+																							  target:self 
+																							  action:@selector(getStatus)] autorelease]];
 	
 	[self.tableView setRowHeight:kUserCellHeight];
 	
