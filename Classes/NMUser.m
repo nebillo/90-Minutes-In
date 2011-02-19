@@ -8,6 +8,7 @@
 
 #import "NMUser.h"
 #import "NMStatusUpdate.h"
+#import "NSDictionaryAdditions.h"
 
 
 @implementation NMUser
@@ -17,12 +18,12 @@
 		self.identifier = [dictionary objectForKey:@"id"];
 		self.facebookId = [dictionary objectForKey:@"facebook_id"];
 		self.name = [dictionary objectForKey:@"name"];
-		self.firstName = [dictionary objectForKey:@"first_name"];
-		self.lastName = [dictionary objectForKey:@"last_name"];
-		self.picture = [dictionary objectForKey:@"picture"];
+		self.firstName = [dictionary objectForKeyOrNil:@"first_name"];
+		self.lastName = [dictionary objectForKeyOrNil:@"last_name"];
+		self.picture = [dictionary objectForKeyOrNil:@"picture"];
 		self.accessToken = [dictionary objectForKey:@"access_token"];
 		
-		if ([dictionary objectForKey:@"status"]) {
+		if ([dictionary objectForKeyOrNil:@"status"]) {
 			self.lastStatus = [[[NMStatusUpdate alloc] initWithDictionary:[dictionary objectForKey:@"status"]] autorelease];
 		}
 	}

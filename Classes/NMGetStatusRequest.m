@@ -12,9 +12,7 @@
 
 #import "ASIHTTPRequest+Signature.h"
 #import "NMAuthenticationManager.h"
-
-
-#import <CoreLocation/CoreLocation.h>
+#import "NSDictionaryAdditions.h"
 
 
 @implementation NMGetStatusRequest
@@ -48,9 +46,10 @@
 	}
 	
 	NSDictionary *response = [super createResponseForMainRequest:request];
-	response = [response objectForKey:@"status"];
+	response = [response objectForKeyOrNil:@"status"];
 	if (!response) {
-		return nil;
+		// expired status
+		return [NSNull null];
 	}
 	
 	NMStatusUpdate *status = [[[NMStatusUpdate alloc] initWithDictionary:response] autorelease];

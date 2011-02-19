@@ -8,6 +8,7 @@
 
 #import "NMStatusUpdate.h"
 #import "NSDateAdditions.h"
+#import "NSDictionaryAdditions.h"
 
 
 NSString * const kNMStatusOut = @"out";
@@ -22,13 +23,13 @@ NSString * const kNMStatusIn = @"in";
 		
 		self.status = [dict objectForKey:@"status"];
 		
-		NSString *location = [dict objectForKey:@"location"];
+		NSString *location = [dict objectForKeyOrNil:@"location"];
 		if (location) {
 			NSArray *coords = [location componentsSeparatedByString:@","];
 			CLLocation *location = [[[CLLocation alloc] initWithLatitude:[[coords objectAtIndex:0] floatValue] 
 															   longitude:[[coords objectAtIndex:1] floatValue]] autorelease];
 			self.location = location;
-			self.address = [dict objectForKey:@"address"];
+			self.address = [dict objectForKeyOrNil:@"address"];
 		}
 		
 		self.createdAt = [NSDate dateWithISOString:[dict objectForKey:@"created_at"]];
