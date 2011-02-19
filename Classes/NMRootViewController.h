@@ -19,12 +19,16 @@
 - (id)initWithUser:(NMUser *)user;
 @property (nonatomic, retain) NMUser *user;
 
-@property (nonatomic, retain) IBOutlet UISegmentedControl *statusControl;
+@property (nonatomic, retain) IBOutlet UIButton *statusInButton;
+@property (nonatomic, retain) IBOutlet UIButton *statusOutButton;
+@property (nonatomic, retain) IBOutlet UIView *statusControl;
+
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 - (IBAction)getStatus;
-- (IBAction)updateStatus;
+- (IBAction)setStatusIn;
+- (IBAction)setStatusOut;
 - (IBAction)updateFriends;
 
 - (IBAction)filterFriends:(UISegmentedControl *)control;

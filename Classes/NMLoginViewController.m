@@ -8,6 +8,7 @@
 
 #import "NMLoginViewController.h"
 #import "NinetyMinutesAppDelegate.h"
+#import "NMViewExtension.h"
 
 
 @implementation NMLoginViewController
@@ -34,9 +35,9 @@
 
 
 - (IBAction)signin {
+	[self.view presentLoadingViewWithTitle:@"Connecting…"];
 	[[NMAuthenticationManager sharedManager] setDelegate:self];
 	[[NMAuthenticationManager sharedManager] connectWithFacebookAppId:kFacebookAppId];
-	//TODO: lock view
 }
 
 
@@ -44,6 +45,7 @@
 #pragma mark NMAuthenticationManagerDelegate
 
 - (void)authenticationManager:(NMAuthenticationManager *)manager didConnectUser:(NMUser *)user {
+	[self.view dismissStaticView];
 	// show root controller
 	[(NinetyMinutesAppDelegate *)[UIApplication sharedApplication].delegate showRootController];
 	
@@ -53,6 +55,8 @@
 
 
 - (void)authenticationManager:(NMAuthenticationManager *)manager didFailConnectUserWithError:(NSError *)error {
+	[self.view dismissStaticView];
+	
 	if ([[error domain] isEqualToString:kNMFacebookDomain] && [error code] == 1) {
 		// cancelled by user
 		return;

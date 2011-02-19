@@ -89,14 +89,23 @@
 }
 
 
-- (IBAction)updateStatus {
+- (void)setStatus:(NSString *)status {
 	[self.view presentLoadingViewWithTitle:@"Updating your status…"];
-	[self.statusControl setEnabled:NO];
 	
 	NMUpdateStatusRequest *update = [[[NMUpdateStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
-	[update setStatus:self.statusControl.selectedSegmentIndex == 0 ? kNMStatusIn : kNMStatusOut];
+	[update setStatus:status];
 	[update start];
+}
+
+
+- (IBAction)setStatusIn {
+	[self setStatus:kNMStatusIn];
+}
+
+
+- (IBAction)setStatusOut {
+	[self setStatus:kNMStatusOut];
 }
 
 
@@ -117,15 +126,18 @@
 - (void)updateWithStatus:(NMStatusUpdate *)status {
 	if (!status || (NSNull *)status == [NSNull null] || status.expired) {
 		// no status or status is expired
-		[self.statusControl setEnabled:YES];
-		[self.statusControl setSelected:NO];
+		[self.statusControl setUserInteractionEnabled:YES];
+		[self.statusInButton setSelected:NO];
+		[self.statusOutButton setSelected:NO];
 	} else {
 		// there is a valid status
-		[self.statusControl setEnabled:NO];
+		[self.statusControl setUserInteractionEnabled:NO];
 		if ([status.status isEqualToString:kNMStatusIn]) {
-			[self.statusControl setSelectedSegmentIndex:0];
+			[self.statusInButton setSelected:YES];
+			[self.statusOutButton setSelected:NO];
 		} else {
-			[self.statusControl setSelectedSegmentIndex:1];
+			[self.statusOutButton setSelected:YES];
+			[self.statusInButton setSelected:NO];
 		}
 	}
 }
@@ -239,8 +251,11 @@
 
 - (void)viewDidUnload {
 	self.tableView = nil;
+	self.statusInButton = nil;
+	self.statusOutButton = nil;
 	self.statusControl = nil;
 	self.userLabel = nil;
+	[super viewDidUnload];
 }
 
 
@@ -248,6 +263,8 @@
 	[_friends release];
 	self.user = nil;
 	self.tableView = nil;
+	self.statusInButton = nil;
+	self.statusOutButton = nil;
 	self.statusControl = nil;
 	self.userLabel = nil;
     [super dealloc];
@@ -255,6 +272,8 @@
 
 
 @synthesize tableView;
+@synthesize statusInButton;
+@synthesize statusOutButton;
 @synthesize statusControl;
 @synthesize userLabel;
 @synthesize user;
