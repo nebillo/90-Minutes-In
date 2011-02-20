@@ -187,9 +187,7 @@ static NMUser *authenticatedUser = nil;
 - (void)fbDidLogin {
 	NSLog(@"user did login to facebook with token: %@", _facebookManager.accessToken);
 	// read user data
-	[_facebookManager requestWithGraphPath:@"me" 
-								 andParams:[NSMutableDictionary dictionaryWithObject:@"friends" forKey:@"fields"] 
-							   andDelegate:self];
+	[_facebookManager requestWithGraphPath:@"me" andDelegate:self];
 }
 
 
