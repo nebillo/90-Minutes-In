@@ -24,7 +24,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	[self.navigationItem setHidesBackButton:YES];
 	[self.navigationItem setTitle:@"Signin"];
 }
 
@@ -50,10 +49,8 @@
 	// show root controller
 	[(NinetyMinutesAppDelegate *)[UIApplication sharedApplication].delegate showRootController];
 	
-	// and dismiss login (vertically)
-	[self.navigationController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-	UIViewController *main = [(NinetyMinutesAppDelegate *)[UIApplication sharedApplication].delegate navigationController];
-	[main dismissModalViewControllerAnimated:YES];
+	// and dismiss login
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 

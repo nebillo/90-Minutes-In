@@ -7,16 +7,18 @@
 //
 
 #import "NinetyMinutesAppDelegate.h"
-#import "NMRootViewController.h"
-#import "NMLoginViewController.h"
 
 #import "NMAuthenticationManager.h"
+#import "NMLoginViewController.h"
+
+#import "NMRootViewController.h"
+#import "NMInfoViewController.h"
 
 
 @implementation NinetyMinutesAppDelegate
 
 @synthesize window;
-@synthesize navigationController;
+@synthesize tabBarController;
 
 
 #pragma mark -
@@ -27,7 +29,7 @@
     // Override point for customization after application launch.
     
     // Add the navigation controller's view to the window and display.
-    [self.window addSubview:self.navigationController.view];
+    [self.window addSubview:self.tabBarController.view];
     [self.window makeKeyAndVisible];
 	
 	if ([[NMAuthenticationManager sharedManager] isSessionValid]) {
@@ -81,16 +83,30 @@
 - (void)showLoginController {
 	NMLoginViewController *controller = [[[NMLoginViewController alloc] init] autorelease];
 	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-	[self.navigationController presentModalViewController:nav animated:YES];
+	[self.tabBarController presentModalViewController:nav animated:YES];
 }
 
 
 - (void)showRootController {
-	[self.navigationController setViewControllers:nil];
+	[self.tabBarController setViewControllers:nil];
 	
+	// status controller
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	NMRootViewController *controller = [[(NMRootViewController *)[NMRootViewController alloc] initWithUser:user] autorelease];
-	[self.navigationController pushViewController:controller animated:NO];
+	NMRootViewController *root = [[(NMRootViewController *)[NMRootViewController alloc] initWithUser:user] autorelease];
+	UINavigationController *rootNav = [[[UINavigationController alloc] initWithRootViewController:root] autorelease];
+	[rootNav.tabBarItem setTitle:@"Me"];
+	
+	// friends controller
+	UIViewController *friends = [[[UIViewController alloc] init] autorelease];
+	UINavigationController *friendsNav = [[[UINavigationController alloc] initWithRootViewController:friends] autorelease];
+	[friendsNav.tabBarItem setTitle:@"Friends"];
+	
+	// info controller
+	NMInfoViewController *info = [[[NMInfoViewController alloc] init] autorelease];
+	UINavigationController *infoNav = [[[UINavigationController alloc] initWithRootViewController:info] autorelease];
+	[infoNav.tabBarItem setTitle:@"More"];
+	
+	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:rootNav, friendsNav, infoNav, nil]];
 }
 
 
@@ -105,7 +121,7 @@
 
 
 - (void)dealloc {
-	[navigationController release];
+	[tabBarController release];
 	[window release];
 	[super dealloc];
 }

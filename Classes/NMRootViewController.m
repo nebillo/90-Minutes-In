@@ -13,7 +13,6 @@
 #import "NMFriendsRequest.h"
 #import "NMViewExtension.h"
 #import "NMUserCell.h"
-#import "NMInfoViewController.h"
 
 
 @interface NMRootViewController ()
@@ -81,10 +80,6 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(getStatus)] autorelease]];
-	[self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"About" 
-																				style:UIBarButtonItemStyleBordered 
-																			   target:self 
-																			   action:@selector(showInfo)] autorelease]];
 	
 	[self.tableView setRowHeight:kUserCellHeight];
 	
@@ -125,13 +120,6 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
  */
-
-
-- (IBAction)showInfo {
-	NMInfoViewController *controller = [[[NMInfoViewController alloc] init] autorelease];
-	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-	[self.navigationController presentModalViewController:nav animated:YES];
-}
 
 
 - (IBAction)getStatus {

@@ -8,7 +8,7 @@
 
 #import "NMInfoViewController.h"
 #import "NMAuthenticationManager.h"
-#import "NMLoginViewController.h"
+#import "NinetyMinutesAppDelegate.h"
 
 
 @implementation NMInfoViewController
@@ -27,15 +27,6 @@
     [super viewDidLoad];
 	
 	[self.navigationItem setTitle:@"About"];
-	[self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"Back" 
-																				style:UIBarButtonItemStyleDone 
-																			   target:self 
-																			   action:@selector(backToRoot)] autorelease]];
-}
-
-
-- (IBAction)backToRoot {
-	[self dismissModalViewControllerAnimated:YES];
 }
 
 
@@ -61,11 +52,8 @@
 	// logout
 	[[NMAuthenticationManager sharedManager] clearSession];
 	
-	// present login controller with flip animation
-	NMLoginViewController *controller = [[[NMLoginViewController alloc] init] autorelease];
-	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-	[nav setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-	[self presentModalViewController:nav animated:YES];
+	// present login controller
+	[(NinetyMinutesAppDelegate *)[UIApplication sharedApplication].delegate showLoginController];
 }
 
 
