@@ -55,6 +55,9 @@
 		NMUser *user = [[[NMUser alloc] initWithDictionary:dict] autorelease];
 		[friends addObject:user];
 	}
+	// name ordering
+	[friends sortUsingSelector:@selector(compareWithUser:)];
+	
 	return friends;
 }
 @end

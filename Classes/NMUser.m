@@ -33,6 +33,21 @@
 }
 
 
+- (NSComparisonResult)compareWithUser:(NMUser *)user {
+	// compare by last name
+	NSComparisonResult result = [self.lastName compare:user.lastName options:NSCaseInsensitiveSearch];
+	if (result == NSOrderedSame) {
+		// and by middle name
+		result = [self.middleName compare:user.middleName options:NSCaseInsensitiveSearch];
+	}
+	if (result == NSOrderedSame) {
+		// and by first name
+		result = [self.firstName compare:user.firstName options:NSCaseInsensitiveSearch];
+	}
+	return result;
+}
+
+
 #pragma mark -
 #pragma mark NSCoding
 

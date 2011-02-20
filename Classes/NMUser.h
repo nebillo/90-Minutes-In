@@ -28,4 +28,6 @@
 
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
+- (NSComparisonResult)compareWithUser:(NMUser *)user;
+
 @end
