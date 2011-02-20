@@ -29,8 +29,23 @@
     if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
         // Custom initialization
 		self.user = user;
+		_friendsFilter = 0;
     }
     return self;
+}
+
+
+- (void)filterFriendsWithFilter:(NSString *)filter {
+	NSMutableArray *filtered = [NSMutableArray array];
+	
+	for (NMUser *user in _friends) {
+		if (!filter || (!user.lastStatus.expired && [user.lastStatus.status isEqualToString:filter])) {
+			[filtered addObject:user];
+		}
+	}
+	
+	[_filteredFriends release];
+	_filteredFriends = [filtered retain];
 }
 
 
@@ -53,6 +68,8 @@
 	
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", self.user.firstName]];
 	[self updateWithStatus:self.user.lastStatus];
+	
+	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
 }
 
 
@@ -137,6 +154,17 @@
 
 
 - (IBAction)filterFriends:(UISegmentedControl *)control {
+	_friendsFilter = control.selectedSegmentIndex;
+	
+	if (_friendsFilter == 0) {
+		[self filterFriendsWithFilter:nil];
+	} else if (_friendsFilter == 1) {
+		[self filterFriendsWithFilter:kNMStatusIn];
+	} else if (_friendsFilter == 2) {
+		[self filterFriendsWithFilter:kNMStatusOut];
+	}
+	
+	[self.tableView reloadData];
 }
 
 
@@ -211,7 +239,7 @@
 		
 		[_friends release];
 		_friends = [response retain];
-		[self.tableView reloadData];
+		[self filterFriends:self.filterControl];
 		
 	}
 }
@@ -228,7 +256,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _friends.count;
+    return _filteredFriends.count;
 }
 
 
@@ -241,7 +269,7 @@
     }
     
 	// Configure the cell.
-	NMUser *friend = [_friends objectAtIndex:indexPath.row];
+	NMUser *friend = [_filteredFriends objectAtIndex:indexPath.row];
 	[cell setUser:friend];
 
     return cell;
@@ -272,11 +300,13 @@
 	self.statusOutButton = nil;
 	self.statusControl = nil;
 	self.userLabel = nil;
+	self.filterControl = nil;
 	[super viewDidUnload];
 }
 
 
 - (void)dealloc {
+	[_filteredFriends release];
 	[_friends release];
 	self.user = nil;
 	self.tableView = nil;
@@ -284,10 +314,12 @@
 	self.statusOutButton = nil;
 	self.statusControl = nil;
 	self.userLabel = nil;
+	self.filterControl = nil;
     [super dealloc];
 }
 
 
+@synthesize filterControl;
 @synthesize tableView;
 @synthesize statusInButton;
 @synthesize statusOutButton;

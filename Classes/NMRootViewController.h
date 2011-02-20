@@ -14,6 +14,8 @@
 @interface NMRootViewController : UIViewController <NMRequestDelegate>
 {
 	NSArray *_friends;
+	NSArray *_filteredFriends;
+	NSUInteger _friendsFilter;
 }
 
 - (id)initWithUser:(NMUser *)user;
@@ -25,6 +27,7 @@
 
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) IBOutlet UISegmentedControl *filterControl;
 
 - (IBAction)getStatus;
 - (IBAction)setStatusIn;
