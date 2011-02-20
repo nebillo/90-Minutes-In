@@ -92,10 +92,9 @@
 	[self.tabBarController setViewControllers:nil];
 	
 	// status controller
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	NMRootViewController *root = [[(NMRootViewController *)[NMRootViewController alloc] initWithUser:user] autorelease];
+	NMRootViewController *root = [[(NMRootViewController *)[NMRootViewController alloc] init] autorelease];
 	UINavigationController *rootNav = [[[UINavigationController alloc] initWithRootViewController:root] autorelease];
-	[rootNav.tabBarItem setTitle:@"Me"];
+	[rootNav.tabBarItem setTitle:@"You"];
 	
 	// friends controller
 	NMFriendsViewController *friends = [[[NMFriendsViewController alloc] init] autorelease];
