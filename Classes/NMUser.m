@@ -20,6 +20,8 @@
 		self.name = [dictionary objectForKey:@"name"];
 		self.firstName = [dictionary objectForKeyOrNil:@"first_name"];
 		self.lastName = [dictionary objectForKeyOrNil:@"last_name"];
+		self.middleName = [dictionary objectForKeyOrNil:@"middle_name"];
+		self.gender = [dictionary objectForKeyOrNil:@"gender"];
 		self.picture = [dictionary objectForKeyOrNil:@"picture"];
 		self.accessToken = [dictionary objectForKey:@"access_token"];
 		
@@ -40,6 +42,8 @@
 	[coder encodeObject:self.name forKey:@"name"];
 	[coder encodeObject:self.lastName forKey:@"last_name"];
 	[coder encodeObject:self.firstName forKey:@"first_name"];
+	[coder encodeObject:self.middleName forKey:@"middle_name"];
+	[coder encodeObject:self.gender forKey:@"gender"];
 	[coder encodeObject:self.picture forKey:@"picture"];
 	[coder encodeObject:self.accessToken forKey:@"access_token"];
 }
@@ -52,6 +56,8 @@
 		[self setName:[decoder decodeObjectForKey:@"name"]];
 		[self setLastName:[decoder decodeObjectForKey:@"last_name"]];
 		[self setFirstName:[decoder decodeObjectForKey:@"first_name"]];
+		[self setMiddleName:[decoder decodeObjectForKey:@"middle_name"]];
+		[self setGender:[decoder decodeObjectForKey:@"gender"]];
 		[self setPicture:[decoder decodeObjectForKey:@"picture"]];
 		[self setAccessToken:[decoder decodeObjectForKey:@"access_token"]];
 	}
@@ -68,6 +74,8 @@
 	self.name = nil;
 	self.lastName = nil;
 	self.firstName = nil;
+	self.middleName = nil;
+	self.gender = nil;
 	self.picture = nil;
 	self.accessToken = nil;
 	self.lastStatus = nil;
@@ -80,6 +88,8 @@
 @synthesize name;
 @synthesize lastName;
 @synthesize firstName;
+@synthesize middleName;
+@synthesize gender;
 @synthesize picture;
 @synthesize accessToken;
 @synthesize lastStatus;

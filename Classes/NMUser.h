@@ -21,6 +21,8 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *firstName;
 @property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *middleName;
+@property (nonatomic, copy) NSString *gender;
 @property (nonatomic, copy) NSString *picture;
 @property (nonatomic, retain) NMStatusUpdate *lastStatus;
 
