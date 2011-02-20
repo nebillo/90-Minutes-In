@@ -44,8 +44,30 @@
 		}
 	}
 	
+	// group friends by first letter of last name
+	NSMutableArray *groups = [NSMutableArray array];
+	NSMutableArray *indexes = [NSMutableArray array];
+	
+	for (NMUser *user in filtered) {
+		NSString *firstLetter = [user.lastName substringToIndex:1];
+		firstLetter = [firstLetter uppercaseString];
+		
+		if (NSNotFound == [indexes indexOfObject:firstLetter]) {
+			[indexes addObject:firstLetter];
+			NSMutableArray *sectionArray = [NSMutableArray array];
+			[groups addObject:sectionArray];
+			[sectionArray addObject:user];
+		} else {
+			NSMutableArray *sectionArray = [groups lastObject];
+			[sectionArray addObject:user];			
+		}
+		
+	}
+	
 	[_filteredFriends release];
-	_filteredFriends = [filtered retain];
+	_filteredFriends = [groups retain];
+	[_tableIndex release];
+	_tableIndex = [indexes retain];
 }
 
 
@@ -249,13 +271,20 @@
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return _filteredFriends.count;
 }
 
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _filteredFriends.count;
+    NSArray *friends = [_filteredFriends objectAtIndex:section];
+	return friends.count;
+}
+
+
+// return list of section titles to display in section index view (e.g. "ABCD...Z#")
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+	return _tableIndex;
 }
 
 
@@ -268,7 +297,7 @@
     }
     
 	// Configure the cell.
-	NMUser *friend = [_filteredFriends objectAtIndex:indexPath.row];
+	NMUser *friend = [[_filteredFriends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 	[cell setUser:friend];
 
     return cell;
@@ -307,6 +336,7 @@
 - (void)dealloc {
 	[_filteredFriends release];
 	[_friends release];
+	[_tableIndex release];
 	self.user = nil;
 	self.tableView = nil;
 	self.statusInButton = nil;

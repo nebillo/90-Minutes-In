@@ -16,6 +16,7 @@
 	NSArray *_friends;
 	NSArray *_filteredFriends;
 	NSUInteger _friendsFilter;
+	NSArray *_tableIndex;
 }
 
 - (id)initWithUser:(NMUser *)user;
