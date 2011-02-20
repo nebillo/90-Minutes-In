@@ -108,8 +108,7 @@
 - (IBAction)showInfo {
 	NMInfoViewController *controller = [[[NMInfoViewController alloc] init] autorelease];
 	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
-	[nav setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-	[self presentModalViewController:nav animated:YES];
+	[self.navigationController presentModalViewController:nav animated:YES];
 }
 
 
