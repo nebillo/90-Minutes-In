@@ -46,6 +46,8 @@
 		3D2B0BFB1306DFA0002BD38A /* NMLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0BF91306DFA0002BD38A /* NMLoginViewController.m */; };
 		3D2B0BFC1306DFA0002BD38A /* NMLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D2B0BFA1306DFA0002BD38A /* NMLoginViewController.xib */; };
 		3D2B0C7F1306EEF7002BD38A /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2B0C7E1306EEF7002BD38A /* Global.m */; };
+		3D43777A1311593600D13DFC /* NMFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4377781311593600D13DFC /* NMFriendsViewController.m */; };
+		3D43777B1311593600D13DFC /* NMFriendsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D4377791311593600D13DFC /* NMFriendsViewController.xib */; };
 		3D57B404130C8ED000073D3C /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B3ED130C8ED000073D3C /* Facebook.m */; };
 		3D57B405130C8ED000073D3C /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 3D57B3EF130C8ED000073D3C /* FBDialog.bundle */; };
 		3D57B406130C8ED000073D3C /* FBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B3F1130C8ED000073D3C /* FBDialog.m */; };
@@ -395,6 +397,9 @@
 		3D2B0BFA1306DFA0002BD38A /* NMLoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NMLoginViewController.xib; sourceTree = "<group>"; };
 		3D2B0C7D1306EEF7002BD38A /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		3D2B0C7E1306EEF7002BD38A /* Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Global.m; sourceTree = "<group>"; };
+		3D4377771311593600D13DFC /* NMFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMFriendsViewController.h; sourceTree = "<group>"; };
+		3D4377781311593600D13DFC /* NMFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMFriendsViewController.m; sourceTree = "<group>"; };
+		3D4377791311593600D13DFC /* NMFriendsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NMFriendsViewController.xib; sourceTree = "<group>"; };
 		3D57B3EC130C8ED000073D3C /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		3D57B3ED130C8ED000073D3C /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
 		3D57B3EE130C8ED000073D3C /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBConnect.h; sourceTree = "<group>"; };
@@ -654,6 +659,7 @@
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
 				3D2B0BFD1306DFA7002BD38A /* Login */,
 				3D2B0C2D1306E6E2002BD38A /* Root */,
+				3D4377761311588500D13DFC /* Friends */,
 				3DEE413613100F420062AF1E /* Info */,
 			);
 			name = Controller;
@@ -766,11 +772,21 @@
 				28C286DF0D94DF7D0034E888 /* NMRootViewController.h */,
 				28C286E00D94DF7D0034E888 /* NMRootViewController.m */,
 				28F335F01007B36200424DE2 /* NMRootViewController.xib */,
+			);
+			name = Root;
+			sourceTree = "<group>";
+		};
+		3D4377761311588500D13DFC /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				3D4377771311593600D13DFC /* NMFriendsViewController.h */,
+				3D4377781311593600D13DFC /* NMFriendsViewController.m */,
+				3D4377791311593600D13DFC /* NMFriendsViewController.xib */,
 				3DE51BEF130F552B004353F3 /* NMUserCell.h */,
 				3DE51BF0130F552B004353F3 /* NMUserCell.m */,
 				3DE51BF6130F564F004353F3 /* NMUserCell.xib */,
 			);
-			name = Root;
+			name = Friends;
 			sourceTree = "<group>";
 		};
 		3D57B3EB130C8ED000073D3C /* Facebook */ = {
@@ -1190,6 +1206,7 @@
 				3DE51A3B130F3931004353F3 /* NMViewExtension.xib in Resources */,
 				3DE51BF7130F564F004353F3 /* NMUserCell.xib in Resources */,
 				3DEE413B13100F590062AF1E /* NMInfoViewController.xib in Resources */,
+				3D43777B1311593600D13DFC /* NMFriendsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1250,6 +1267,7 @@
 				3DE51B7E130F4B06004353F3 /* NMFriendsRequest.m in Sources */,
 				3DE51BF1130F552B004353F3 /* NMUserCell.m in Sources */,
 				3DEE413A13100F590062AF1E /* NMInfoViewController.m in Sources */,
+				3D43777A1311593600D13DFC /* NMFriendsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

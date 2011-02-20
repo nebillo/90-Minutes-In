@@ -12,6 +12,7 @@
 #import "NMLoginViewController.h"
 
 #import "NMRootViewController.h"
+#import "NMFriendsViewController.h"
 #import "NMInfoViewController.h"
 
 
@@ -97,7 +98,7 @@
 	[rootNav.tabBarItem setTitle:@"Me"];
 	
 	// friends controller
-	UIViewController *friends = [[[UIViewController alloc] init] autorelease];
+	NMFriendsViewController *friends = [[[NMFriendsViewController alloc] init] autorelease];
 	UINavigationController *friendsNav = [[[UINavigationController alloc] initWithRootViewController:friends] autorelease];
 	[friendsNav.tabBarItem setTitle:@"Friends"];
 	
