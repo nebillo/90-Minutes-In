@@ -16,6 +16,7 @@
 #import "NMGetStatusRequest.h"
 
 #import "NMViewExtension.h"
+#import <Three20Core/NSDateAdditions.h>
 
 
 @interface NMRootViewController ()
@@ -48,7 +49,7 @@
 																							  target:self 
 																							  action:@selector(getStatus)] autorelease]];
 		
-	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, your are:", user.firstName]];
+	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, you are:", user.firstName]];
 	[self updateWithStatus:user.lastStatus];
 }
 
@@ -91,12 +92,19 @@
 
 
 - (void)updateWithStatus:(NMStatusUpdate *)status {
-	if (!status || (NSNull *)status == [NSNull null] || status.expired) {
+	if (!status || status.expired) {
 		// no status or status is expired
 		[self.statusInButton setUserInteractionEnabled:YES];
 		[self.statusOutButton setUserInteractionEnabled:YES];
 		[self.statusInButton setSelected:NO];
 		[self.statusOutButton setSelected:NO];
+		
+		if (status) {
+			[self.statusLabel setText:[NSString stringWithFormat:@"You were '%@' until %@", 
+									   status.status, [status.expirationDate formatRelativeTime]]];
+		} else {
+			[self.statusLabel setText:@""];
+		}
 	} else {
 		// there is a valid status
 		[self.statusInButton setUserInteractionEnabled:NO];
@@ -108,6 +116,9 @@
 			[self.statusOutButton setSelected:YES];
 			[self.statusInButton setSelected:NO];
 		}
+		
+		int minutes = ceil(status.remainingTime / 60.0);
+		[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d more minutes", status.status, minutes]];
 	}
 }
 
@@ -135,7 +146,7 @@
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
 	
-	NMStatusUpdate *status = (NMStatusUpdate *)response;
+	NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
 	[self updateWithStatus:status];
 	[self.view dismissStaticView];
 	
@@ -159,6 +170,7 @@
 	self.statusInButton = nil;
 	self.statusOutButton = nil;
 	self.userLabel = nil;
+	self.statusLabel = nil;
 	[super viewDidUnload];
 }
 
@@ -167,6 +179,7 @@
 	self.statusInButton = nil;
 	self.statusOutButton = nil;
 	self.userLabel = nil;
+	self.statusLabel = nil;
     [super dealloc];
 }
 
@@ -174,6 +187,7 @@
 @synthesize statusInButton;
 @synthesize statusOutButton;
 @synthesize userLabel;
+@synthesize statusLabel;
 
 @end
 

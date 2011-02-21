@@ -18,6 +18,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *statusOutButton;
 
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
+@property (nonatomic, retain) IBOutlet UILabel *statusLabel;
 
 - (IBAction)getStatus;
 - (IBAction)setStatusIn;
