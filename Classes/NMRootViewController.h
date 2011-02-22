@@ -21,12 +21,6 @@
 	NSTimer *_expirationClock;
 }
 
-@property (nonatomic, retain) IBOutlet UIButton *statusInButton;
-@property (nonatomic, retain) IBOutlet UIButton *statusOutButton;
-
-@property (nonatomic, retain) IBOutlet UILabel *userLabel;
-@property (nonatomic, retain) IBOutlet UILabel *statusLabel;
-
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 
 - (void)getUserLocation;

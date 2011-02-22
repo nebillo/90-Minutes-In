@@ -27,7 +27,7 @@
 @interface NMRootViewController ()
 
 - (void)updateWithStatus:(NMStatusUpdate *)status;
-- (void)updateWithLocation:(CLLocation *)location;
+- (void)updateMapView;
 
 @end
 
@@ -51,14 +51,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	
-	[self.navigationItem setTitle:@"90 Minutes In"];
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(getStatus)] autorelease]];
-		
-	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, you are:", user.firstName]];
 }
 
 
@@ -68,7 +63,7 @@
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
 	
 	[self updateWithStatus:user.lastStatus];
-	[self updateWithLocation:user.currentLocation];
+	[self updateMapView];
 }
 
 
@@ -107,14 +102,12 @@
 - (void)updateRemainingTimeWithStatus:(NMStatusUpdate *)status {
 	int minutes = floor(status.remainingTime / 60.0);
 	int seconds = fmod(status.remainingTime, 60.0);
-	[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d:%@%d more minutes", status.status, 
-							   minutes, seconds >= 10 ? @"" : @"0", seconds]];
+	[self setTitle:[NSString stringWithFormat:@"%d:%@%d minutes %@", minutes, seconds >= 10 ? @"" : @"0", seconds, status.status]];
 }
 
 
 - (void)updateLastDateWithStatus:(NMStatusUpdate *)status {
-	[self.statusLabel setText:[NSString stringWithFormat:@"You were '%@' until %@", 
-							   status.status, [status.expirationDate formatRelativeTime]]];
+	[self setTitle:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
 }
 
 
@@ -125,13 +118,10 @@
 	[_expirationClock invalidate];
 	_expirationClock = nil;
 	
+	//TODO: update current user annotation
+	
 	if (!status || status.expired) {
 		// no status or status is expired
-		[self.statusInButton setUserInteractionEnabled:YES];
-		[self.statusOutButton setUserInteractionEnabled:YES];
-		[self.statusInButton setSelected:NO];
-		[self.statusOutButton setSelected:NO];
-		
 		if (status) {
 			[self updateLastDateWithStatus:status];
 			_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
@@ -140,20 +130,10 @@
 													userInfo:nil 
 													 repeats:YES];
 		} else {
-			[self.statusLabel setText:@""];
+			[self setTitle:@"You"];
 		}
 	} else {
 		// there is a valid status
-		[self.statusInButton setUserInteractionEnabled:NO];
-		[self.statusOutButton setUserInteractionEnabled:NO];
-		if ([status.status isEqualToString:kNMStatusIn]) {
-			[self.statusInButton setSelected:YES];
-			[self.statusOutButton setSelected:NO];
-		} else {
-			[self.statusOutButton setSelected:YES];
-			[self.statusInButton setSelected:NO];
-		}
-		
 		[self updateRemainingTimeWithStatus:status];
 		
 		_clock = [NSTimer scheduledTimerWithTimeInterval:1.0 
@@ -188,6 +168,7 @@
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
 	NMStatusUpdate *status = user.lastStatus;
 	[self updateWithStatus:status];
+	[self updateMapView];
 }
 
 
@@ -200,14 +181,14 @@
 }
 
 
-- (void)updateWithLocation:(CLLocation *)location {
+- (void)updateMapView {
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
 	
 	[self.mapView removeAnnotations:self.mapView.annotations];
 	[self.mapView addAnnotation:user];
 	[self.mapView selectAnnotation:user animated:YES];
 	
-	if (location) {
+	if (user.currentLocation) {
 		// TODO: add friends
 		// TODO: show an area containing 10 nearest friends
 	} else {
@@ -289,7 +270,8 @@
 		// get the location
 		[self getUserLocation];
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
-		//
+		// update the annotation
+		[self updateMapView];
 		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
 									 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
 									delegate:nil 
@@ -309,7 +291,7 @@
 	
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
 	[user setCurrentLocation:newLocation];
-	[self updateWithLocation:newLocation];
+	[self updateMapView];
 }
 
 
@@ -323,14 +305,6 @@
 #pragma mark Memory management
 
 - (void)viewDidUnload {
-	[_clock invalidate];
-	_clock = nil;
-	[_expirationClock invalidate];
-	_expirationClock = nil;
-	self.statusInButton = nil;
-	self.statusOutButton = nil;
-	self.userLabel = nil;
-	self.statusLabel = nil;
 	[self.mapView setDelegate:nil];
 	self.mapView = nil;
 	[super viewDidUnload];
@@ -343,20 +317,12 @@
 	[_locationManager release];
 	[_clock invalidate];
 	[_expirationClock invalidate];
-	self.statusInButton = nil;
-	self.statusOutButton = nil;
-	self.userLabel = nil;
-	self.statusLabel = nil;
 	[self.mapView setDelegate:nil];
 	self.mapView = nil;
     [super dealloc];
 }
 
 
-@synthesize statusInButton;
-@synthesize statusOutButton;
-@synthesize userLabel;
-@synthesize statusLabel;
 @synthesize mapView;
 
 @end

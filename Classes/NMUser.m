@@ -10,6 +10,7 @@
 #import "NMStatusUpdate.h"
 #import "NSDictionaryAdditions.h"
 #import <CoreLocation/CLLocation.h>
+#import <Three20Core/NSDateAdditions.h>
 
 
 @implementation NMUser
@@ -102,7 +103,19 @@
 
 
 - (NSString *)subtitle {
-	return self.lastStatus.status;
+	if (!self.lastStatus) {
+		return nil;
+	}
+	if (self.lastStatus.expired) {
+		return [NSString stringWithFormat:@"%@ %@", self.lastStatus.status, [self.lastStatus.expirationDate formatRelativeTime]];
+	}
+	
+	int minutes = ceil(self.lastStatus.remainingTime / 60.0);
+	if (minutes == 1) {
+		return [NSString stringWithFormat:@"about 1 minute %@", self.lastStatus.status];
+	} else {
+		return [NSString stringWithFormat:@"about %d minutes %@", minutes, self.lastStatus.status];
+	}
 }
 
 
