@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MapKit/MKAnnotation.h>
 
 @class NMStatusUpdate;
+@class CLLocation;
 
 
-@interface NMUser : NSObject <NSCoding>
+@interface NMUser : NSObject <NSCoding, MKAnnotation>
 {
 }
 
@@ -25,6 +27,7 @@
 @property (nonatomic, copy) NSString *gender;
 @property (nonatomic, copy) NSString *picture;
 @property (nonatomic, retain) NMStatusUpdate *lastStatus;
+@property (nonatomic, retain) CLLocation *currentLocation;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 

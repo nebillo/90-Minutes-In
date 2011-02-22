@@ -9,6 +9,7 @@
 #import "NMUser.h"
 #import "NMStatusUpdate.h"
 #import "NSDictionaryAdditions.h"
+#import <CoreLocation/CLLocation.h>
 
 
 @implementation NMUser
@@ -81,6 +82,31 @@
 
 
 #pragma mark -
+#pragma mark MKAnnotation
+
+- (CLLocationCoordinate2D)coordinate {
+	if (self.currentLocation) {
+		return self.currentLocation.coordinate;
+	}
+	// 0,0 coordinate
+	CLLocationCoordinate2D zero;
+	zero.latitude = 0;
+	zero.longitude = 0;
+	return zero;
+}
+
+
+- (NSString *)title {
+	return self.name;
+}
+
+
+- (NSString *)subtitle {
+	return self.lastStatus.status;
+}
+
+
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc {
@@ -94,6 +120,7 @@
 	self.picture = nil;
 	self.accessToken = nil;
 	self.lastStatus = nil;
+	self.currentLocation = nil;
 	[super dealloc];
 }
 
@@ -108,5 +135,7 @@
 @synthesize picture;
 @synthesize accessToken;
 @synthesize lastStatus;
+@synthesize currentLocation;
+@synthesize coordinate;
 
 @end
