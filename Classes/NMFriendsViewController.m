@@ -78,13 +78,20 @@
 	[self.tableView setRowHeight:kUserCellHeight];
 	
 	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
+	
+	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
+											  target:self.tableView
+											selector:@selector(reloadData) 
+											userInfo:nil repeats:YES];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	if (!_friends) {
+	if (_friends) {
+		[self.tableView reloadData];
+	} else {
 		[self updateFriends];
 	}
 }
@@ -195,6 +202,8 @@
 #pragma mark Memory management
 
 - (void)viewDidUnload {
+	[_clock invalidate];
+	_clock = nil;
 	self.tableView = nil;
 	self.filterControl = nil;
 	[super viewDidUnload];
@@ -202,6 +211,7 @@
 
 
 - (void)dealloc {
+	[_clock invalidate];
 	[_filteredFriends release];
 	[_friends release];
 	[_tableIndex release];

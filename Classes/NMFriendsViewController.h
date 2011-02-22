@@ -16,6 +16,7 @@
 	NSArray *_filteredFriends;
 	NSUInteger _friendsFilter;
 	NSArray *_tableIndex;
+	NSTimer *_clock;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
