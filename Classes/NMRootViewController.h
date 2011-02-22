@@ -12,6 +12,8 @@
 
 @interface NMRootViewController : UIViewController <NMRequestDelegate>
 {
+	NSTimer *_clock;
+	NSTimer *_expirationClock;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *statusInButton;

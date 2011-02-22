@@ -50,14 +50,13 @@
 																							  action:@selector(getStatus)] autorelease]];
 		
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@, you are:", user.firstName]];
-	[self updateWithStatus:user.lastStatus];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-	
-	[self getStatus];
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	[self updateWithStatus:user.lastStatus];
 }
 
 
@@ -91,7 +90,27 @@
 }
 
 
+- (void)updateRemainingTimeWithStatus:(NMStatusUpdate *)status {
+	int minutes = floor(status.remainingTime / 60.0);
+	int seconds = fmod(status.remainingTime, 60.0);
+	[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d:%@%d more minutes", status.status, 
+							   minutes, seconds > 10 ? @"" : @"0", seconds]];
+}
+
+
+- (void)updateLastDateWithStatus:(NMStatusUpdate *)status {
+	[self.statusLabel setText:[NSString stringWithFormat:@"You were '%@' until %@", 
+							   status.status, [status.expirationDate formatRelativeTime]]];
+}
+
+
 - (void)updateWithStatus:(NMStatusUpdate *)status {
+	// invalidate timers
+	[_clock invalidate];
+	_clock = nil;
+	[_expirationClock invalidate];
+	_expirationClock = nil;
+	
 	if (!status || status.expired) {
 		// no status or status is expired
 		[self.statusInButton setUserInteractionEnabled:YES];
@@ -100,8 +119,12 @@
 		[self.statusOutButton setSelected:NO];
 		
 		if (status) {
-			[self.statusLabel setText:[NSString stringWithFormat:@"You were '%@' until %@", 
-									   status.status, [status.expirationDate formatRelativeTime]]];
+			[self updateLastDateWithStatus:status];
+			_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
+													  target:self 
+													selector:@selector(lastDateClock:) 
+													userInfo:nil 
+													 repeats:YES];
 		} else {
 			[self.statusLabel setText:@""];
 		}
@@ -117,9 +140,40 @@
 			[self.statusInButton setSelected:NO];
 		}
 		
-		int minutes = ceil(status.remainingTime / 60.0);
-		[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d more minutes", status.status, minutes]];
+		[self updateRemainingTimeWithStatus:status];
+		
+		_clock = [NSTimer scheduledTimerWithTimeInterval:1.0 
+												  target:self 
+												selector:@selector(remainingTimeClock:) 
+												userInfo:nil 
+												 repeats:YES];
+		_expirationClock = [NSTimer scheduledTimerWithTimeInterval:status.remainingTime 
+															target:self 
+														  selector:@selector(expires:) 
+														  userInfo:nil 
+														   repeats:NO];
 	}
+}
+
+
+- (void)remainingTimeClock:(NSTimer *)timer {
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	NMStatusUpdate *status = user.lastStatus;
+	[self updateRemainingTimeWithStatus:status];
+}
+
+
+- (void)lastDateClock:(NSTimer *)timer {
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	NMStatusUpdate *status = user.lastStatus;
+	[self updateLastDateWithStatus:status];
+}
+
+
+- (void)expires:(NSTimer *)timer {
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	NMStatusUpdate *status = user.lastStatus;
+	[self updateWithStatus:status];
 }
 
 
@@ -167,6 +221,10 @@
 #pragma mark Memory management
 
 - (void)viewDidUnload {
+	[_clock invalidate];
+	_clock = nil;
+	[_expirationClock invalidate];
+	_expirationClock = nil;
 	self.statusInButton = nil;
 	self.statusOutButton = nil;
 	self.userLabel = nil;
@@ -176,6 +234,8 @@
 
 
 - (void)dealloc {
+	[_clock invalidate];
+	[_expirationClock invalidate];
 	self.statusInButton = nil;
 	self.statusOutButton = nil;
 	self.userLabel = nil;
