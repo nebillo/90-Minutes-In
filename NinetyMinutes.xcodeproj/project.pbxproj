@@ -60,6 +60,7 @@
 		3D57B40D130C8ED000073D3C /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B401130C8ED000073D3C /* SBJsonParser.m */; };
 		3D57B40E130C8ED000073D3C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B403130C8ED000073D3C /* SBJsonWriter.m */; };
 		3DCE95F513145D450005E8F8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCE95F413145D450005E8F8 /* MapKit.framework */; };
+		3DCE966813146C9C0005E8F8 /* NMUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */; };
 		3DE51954130F3520004353F3 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE5194D130F3520004353F3 /* NSDateAdditions.m */; };
 		3DE51955130F3520004353F3 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE5194F130F3520004353F3 /* NSDictionaryAdditions.m */; };
 		3DE51956130F3520004353F3 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51951130F3520004353F3 /* NSStringAdditions.m */; };
@@ -425,6 +426,8 @@
 		3D57B402130C8ED000073D3C /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		3D57B403130C8ED000073D3C /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		3DCE95F413145D450005E8F8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		3DCE966613146C9C0005E8F8 /* NMUserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUserAnnotationView.h; sourceTree = "<group>"; };
+		3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUserAnnotationView.m; sourceTree = "<group>"; };
 		3DE5194C130F3520004353F3 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDateAdditions.h; sourceTree = "<group>"; };
 		3DE5194D130F3520004353F3 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDateAdditions.m; sourceTree = "<group>"; };
 		3DE5194E130F3520004353F3 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryAdditions.h; sourceTree = "<group>"; };
@@ -776,6 +779,8 @@
 				28C286DF0D94DF7D0034E888 /* NMRootViewController.h */,
 				28C286E00D94DF7D0034E888 /* NMRootViewController.m */,
 				28F335F01007B36200424DE2 /* NMRootViewController.xib */,
+				3DCE966613146C9C0005E8F8 /* NMUserAnnotationView.h */,
+				3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */,
 			);
 			name = Root;
 			sourceTree = "<group>";
@@ -1272,6 +1277,7 @@
 				3DE51BF1130F552B004353F3 /* NMUserCell.m in Sources */,
 				3DEE413A13100F590062AF1E /* NMInfoViewController.m in Sources */,
 				3D43777A1311593600D13DFC /* NMFriendsViewController.m in Sources */,
+				3DCE966813146C9C0005E8F8 /* NMUserAnnotationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
