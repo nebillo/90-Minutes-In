@@ -19,6 +19,7 @@
 #import <Three20Core/NSDateAdditions.h>
 
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
 
 @interface NMRootViewController ()
@@ -198,6 +199,32 @@
 
 
 - (void)updateWithLocation:(CLLocation *)location {
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	
+	[self.mapView removeAnnotations:self.mapView.annotations];
+	[self.mapView addAnnotation:user];
+	[self.mapView selectAnnotation:user animated:YES];
+	
+	if (location) {
+		// TODO: add friends
+		// TODO: show an area containing 10 nearest friends
+	} else {
+		[self.mapView setCenterCoordinate:user.coordinate animated:NO];
+	}
+}
+
+
+#pragma mark MKMapViewDelegate
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	MKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"id"];
+	
+	if (!view) {
+		view = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"id"] autorelease];
+		[view setCanShowCallout:YES];
+	}
+	
+	return view;
 }
 
 
@@ -274,6 +301,8 @@
 	self.statusOutButton = nil;
 	self.userLabel = nil;
 	self.statusLabel = nil;
+	[self.mapView setDelegate:nil];
+	self.mapView = nil;
 	[super viewDidUnload];
 }
 
@@ -288,6 +317,8 @@
 	self.statusOutButton = nil;
 	self.userLabel = nil;
 	self.statusLabel = nil;
+	[self.mapView setDelegate:nil];
+	self.mapView = nil;
     [super dealloc];
 }
 

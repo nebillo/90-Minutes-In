@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "NMRequest.h"
 #import <CoreLocation/CLLocationManagerDelegate.h>
+#import <MapKit/MKMapView.h>
 
-@class MKMapView;
 @class CLLocationManager;
 
 
-@interface NMRootViewController : UIViewController <NMRequestDelegate, CLLocationManagerDelegate>
+@interface NMRootViewController : UIViewController <NMRequestDelegate, CLLocationManagerDelegate, MKMapViewDelegate>
 {
 	CLLocationManager *_locationManager;
 	NSTimer *_clock;
