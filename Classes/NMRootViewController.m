@@ -20,6 +20,8 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
+#import "NMUserAnnotationView.h"
+#import "NMCurrentUserAnnotationView.h"
 
 
 @interface NMRootViewController ()
@@ -106,7 +108,7 @@
 	int minutes = floor(status.remainingTime / 60.0);
 	int seconds = fmod(status.remainingTime, 60.0);
 	[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d:%@%d more minutes", status.status, 
-							   minutes, seconds > 10 ? @"" : @"0", seconds]];
+							   minutes, seconds >= 10 ? @"" : @"0", seconds]];
 }
 
 
@@ -217,11 +219,23 @@
 #pragma mark MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
-	MKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"id"];
+	MKAnnotationView *view;
 	
-	if (!view) {
-		view = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"id"] autorelease];
-		[view setCanShowCallout:YES];
+	NMUser *user = (NMUser *)annotation;
+	NMUser *currentUser = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	
+	if (user == currentUser) {
+		view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current-user"];
+		if (!view) {
+			view = [[[NMCurrentUserAnnotationView alloc] initWithAnnotation:annotation 
+															reuseIdentifier:@"current-user"] autorelease];
+		}
+	} else {
+		view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"user"];
+		if (!view) {
+			view = [[[NMUserAnnotationView alloc] initWithAnnotation:annotation 
+													 reuseIdentifier:@"user"] autorelease];
+		}
 	}
 	
 	return view;
