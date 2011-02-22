@@ -18,10 +18,13 @@
 #import "NMViewExtension.h"
 #import <Three20Core/NSDateAdditions.h>
 
+#import <CoreLocation/CoreLocation.h>
+
 
 @interface NMRootViewController ()
 
 - (void)updateWithStatus:(NMStatusUpdate *)status;
+- (void)updateWithLocation:(CLLocation *)location;
 
 @end
 
@@ -31,6 +34,9 @@
 - (id)init {
     if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
         // Custom initialization
+		_locationManager = [[CLLocationManager alloc] init];
+		[_locationManager setDelegate:self];
+		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     }
     return self;
 }
@@ -55,10 +61,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	
 	[self updateWithStatus:user.lastStatus];
+	[self updateWithLocation:user.currentLocation];
 }
 
+
+#pragma mark Status
 
 - (IBAction)getStatus {
 	[self.view presentLoadingViewWithTitle:@"Getting your status…"];
@@ -177,6 +188,19 @@
 }
 
 
+#pragma mark Location
+
+
+- (void)getUserLocation {
+	//[self.view presentLoadingViewWithTitle:@"Getting your location…"];
+	[_locationManager startUpdatingLocation];
+}
+
+
+- (void)updateWithLocation:(CLLocation *)location {
+}
+
+
 #pragma mark -
 #pragma mark NMRequestDelegate
 
@@ -205,7 +229,8 @@
 	[self.view dismissStaticView];
 	
 	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
-		//
+		// get the location
+		[self getUserLocation];
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
 		//
 		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
@@ -214,6 +239,26 @@
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
 	}
+}
+
+
+#pragma mark -
+#pragma mark CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager
+	didUpdateToLocation:(CLLocation *)newLocation
+		   fromLocation:(CLLocation *)oldLocation {
+	[self.view dismissStaticView];
+	
+	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	[user setCurrentLocation:newLocation];
+	[self updateWithLocation:newLocation];
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager
+	   didFailWithError:(NSError *)error {
+	[self.view dismissStaticView];
 }
 
 
@@ -234,6 +279,9 @@
 
 
 - (void)dealloc {
+	[_locationManager stopUpdatingLocation];
+	[_locationManager setDelegate:nil];
+	[_locationManager release];
 	[_clock invalidate];
 	[_expirationClock invalidate];
 	self.statusInButton = nil;
