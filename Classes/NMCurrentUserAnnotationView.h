@@ -9,6 +9,10 @@
 #import "NMUserAnnotationView.h"
 
 
+extern const NSUInteger kUserAnnotationInButton;
+extern const NSUInteger kUserAnnotationOutButton;
+
+
 @interface NMCurrentUserAnnotationView : NMUserAnnotationView 
 {
 }

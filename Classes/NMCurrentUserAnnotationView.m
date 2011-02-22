@@ -11,6 +11,10 @@
 #import "NMStatusUpdate.h"
 
 
+const NSUInteger kUserAnnotationInButton = 1;
+const NSUInteger kUserAnnotationOutButton = 2;
+
+
 @implementation NMCurrentUserAnnotationView
 
 - (UIView *)leftCalloutAccessoryView {
@@ -21,9 +25,10 @@
 		return view;
 	}
 	
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[button setTitle:@"in" forState:UIControlStateNormal];
 	[button setFrame:CGRectMake(0, 0, 32, 32)];
+	[button setTag:kUserAnnotationInButton];
 	return button;
 }
 
@@ -36,9 +41,10 @@
 		return view;
 	}
 	
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[button setTitle:@"out" forState:UIControlStateNormal];
 	[button setFrame:CGRectMake(0, 0, 32, 32)];
+	[button setTag:kUserAnnotationOutButton];
 	return button;
 }
 

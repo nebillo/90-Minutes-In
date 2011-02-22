@@ -242,6 +242,22 @@
 }
 
 
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+	NMUser *currentUser = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	if (currentUser != (NMUser *)(view.annotation)) {
+		return;
+	}
+	
+	if (control.tag == kUserAnnotationInButton) {
+		// set in
+		[self setStatusIn];
+	} else {
+		// set out
+		[self setStatusOut];
+	}
+}
+
+
 #pragma mark -
 #pragma mark NMRequestDelegate
 
