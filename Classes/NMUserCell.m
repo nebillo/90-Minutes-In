@@ -49,7 +49,7 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 		}
 		[self.statusImage setHidden:NO];
 		
-		NSTimeInterval interval = user.lastStatus.remainingTime;
+		NSTimeInterval interval = [user.lastStatus.expirationDate timeIntervalSinceNow];
 		int minutes = ceil(interval / 60.0);
 		[self.statusDate setText:[NSString stringWithFormat:@"%@ for %d more minutes", user.lastStatus.status, minutes]];
 		[self.statusDate setHidden:NO];

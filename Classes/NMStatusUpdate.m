@@ -33,8 +33,16 @@ NSString * const kNMStatusIn = @"in";
 		}
 		
 		self.createdAt = [NSDate dateWithISOString:[dict objectForKey:@"created_at"]];
-		self.expirationDate = [NSDate dateWithISOString:[dict objectForKey:@"expiration_date"]];
-		self.remainingTime = [[dict objectForKeyOrNil:@"remaining_time"] floatValue];
+		
+		NSTimeInterval remainingTime = [[dict objectForKeyOrNil:@"remaining_time"] floatValue];
+		if (remainingTime > 0) {
+			_expired = NO;
+			self.expirationDate = [NSDate dateWithTimeIntervalSinceNow:remainingTime];
+		} else {
+			_expired = YES;
+			self.expirationDate = [NSDate dateWithISOString:[dict objectForKey:@"expiration_date"]];
+		}
+		
 	}
 	return self;
 }
@@ -52,7 +60,18 @@ NSString * const kNMStatusIn = @"in";
 
 
 - (BOOL)isExpired {
-	return self.remainingTime <= 0;
+	if (_expired) {
+		return YES;
+	}
+	return [self.expirationDate timeIntervalSinceNow] <= 0;
+}
+
+
+- (NSTimeInterval)remainingTime {
+	if (self.expired) {
+		return 0.0f;
+	}
+	return [self.expirationDate timeIntervalSinceNow];
 }
 
 
@@ -60,7 +79,6 @@ NSString * const kNMStatusIn = @"in";
 @synthesize status;
 @synthesize createdAt;
 @synthesize expirationDate;
-@synthesize remainingTime;
 @synthesize location;
 @synthesize address;
 

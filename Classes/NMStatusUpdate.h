@@ -16,6 +16,7 @@ extern NSString * const kNMStatusIn;
 
 @interface NMStatusUpdate : NSObject 
 {
+	BOOL _expired;
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict;
@@ -24,7 +25,7 @@ extern NSString * const kNMStatusIn;
 @property (nonatomic, copy) NSString *status;
 @property (nonatomic, retain) NSDate *createdAt;
 @property (nonatomic, retain) NSDate *expirationDate;
-@property (nonatomic, assign) NSTimeInterval remainingTime;
+@property (nonatomic, readonly) NSTimeInterval remainingTime;
 @property (nonatomic, retain) CLLocation *location;
 @property (nonatomic, copy) NSString *address;
 @property (nonatomic, readonly, getter = isExpired) BOOL expired;
