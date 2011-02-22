@@ -248,6 +248,7 @@
 @synthesize statusOutButton;
 @synthesize userLabel;
 @synthesize statusLabel;
+@synthesize mapView;
 
 @end
 

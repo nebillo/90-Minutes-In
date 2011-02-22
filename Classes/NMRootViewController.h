@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "NMRequest.h"
 
+@class MKMapView;
+
 
 @interface NMRootViewController : UIViewController <NMRequestDelegate>
 {
@@ -21,6 +23,8 @@
 
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) IBOutlet UILabel *statusLabel;
+
+@property (nonatomic, retain) IBOutlet MKMapView *mapView;
 
 - (IBAction)getStatus;
 - (IBAction)setStatusIn;
