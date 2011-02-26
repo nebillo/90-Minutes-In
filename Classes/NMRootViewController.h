@@ -11,11 +11,13 @@
 #import <CoreLocation/CLLocationManagerDelegate.h>
 #import <MapKit/MKMapView.h>
 
+@class NMUser;
 @class CLLocationManager;
 
 
 @interface NMRootViewController : UIViewController <NMRequestDelegate, CLLocationManagerDelegate, MKMapViewDelegate>
 {
+	NMUser *_user;
 	CLLocationManager *_locationManager;
 	NSTimer *_clock;
 	NSTimer *_expirationClock;
@@ -23,8 +25,9 @@
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 
-- (void)getUserLocation;
-- (IBAction)getStatus;
+- (void)updateData;
+- (void)updateUserLocation;
+
 - (IBAction)setStatusIn;
 - (IBAction)setStatusOut;
 

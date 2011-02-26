@@ -86,14 +86,14 @@
 #pragma mark MKAnnotation
 
 - (CLLocationCoordinate2D)coordinate {
-	if (self.currentLocation) {
+	if (self.currentLocation && (!self.lastStatus || self.lastStatus.expired)) {
 		return self.currentLocation.coordinate;
 	}
+	if (self.lastStatus.location) {
+		return self.lastStatus.location.coordinate;
+	}
 	// 0,0 coordinate
-	CLLocationCoordinate2D zero;
-	zero.latitude = 0;
-	zero.longitude = 0;
-	return zero;
+	return CLLocationCoordinate2DMake(0, 0);
 }
 
 
