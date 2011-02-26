@@ -7,12 +7,13 @@
 //
 
 #import <MapKit/MKOverlay.h>
-#import <MapKit/MKOverlayView.h>
+
+@class MKPolygon;
 
 
 @interface NMMapOverlay : NSObject <MKOverlay>
-@end
+{
+}
+@property (nonatomic, retain) MKPolygon *polygon;
 
-
-@interface NMMapOverlayView : MKOverlayView
 @end

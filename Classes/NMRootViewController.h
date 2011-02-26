@@ -19,7 +19,6 @@
 	CLLocationManager *_locationManager;
 	NSTimer *_clock;
 	NSTimer *_expirationClock;
-	UIView *_overlay;
 }
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;

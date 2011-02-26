@@ -55,7 +55,8 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(getStatus)] autorelease]];
-	[self.mapView addOverlay:[[[NMMapOverlay alloc] init] autorelease]];
+	NMMapOverlay *overlay = [[[NMMapOverlay alloc] init] autorelease];
+	[self.mapView addOverlay:overlay];
 	
 	CLLocationCoordinate2D coordinate;
 	coordinate.latitude = 0;
@@ -249,10 +250,20 @@
 
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
-	if (!_overlay) {
-		_overlay = [[NMMapOverlayView alloc] initWithOverlay:overlay];
+	NSLog(@"in viewForOverlay!");
+	
+    if ([overlay isKindOfClass:[NMMapOverlay class]])
+	{
+		MKPolygon *proPolygon = [(NMMapOverlay *)overlay polygon];
+
+		MKPolygonView *aView = [[[MKPolygonView alloc] initWithPolygon:proPolygon] autorelease];
+	   
+		aView.fillColor = [[UIColor whiteColor] colorWithAlphaComponent:1];
+		//aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
+		//aView.lineWidth = 3;
+		return aView;
 	}
-	return _overlay;
+    return nil;
 }
 
 
