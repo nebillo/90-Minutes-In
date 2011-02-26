@@ -22,6 +22,7 @@
 #import <MapKit/MapKit.h>
 #import "NMUserAnnotationView.h"
 #import "NMCurrentUserAnnotationView.h"
+#import "NMMapOverlay.h"
 
 
 @interface NMRootViewController ()
@@ -54,6 +55,14 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(getStatus)] autorelease]];
+	[self.mapView addOverlay:[[[NMMapOverlay alloc] init] autorelease]];
+	
+	CLLocationCoordinate2D coordinate;
+	coordinate.latitude = 0;
+	coordinate.longitude = 0;
+	[self.mapView setRegion:MKCoordinateRegionMakeWithDistance(coordinate, 5000, 5000) animated:NO];
+	
+	[self.mapView setZoomEnabled:YES];
 }
 
 
@@ -239,6 +248,14 @@
 }
 
 
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
+	if (!_overlay) {
+		_overlay = [[NMMapOverlayView alloc] initWithOverlay:overlay];
+	}
+	return _overlay;
+}
+
+
 #pragma mark -
 #pragma mark NMRequestDelegate
 
@@ -287,6 +304,7 @@
 - (void)locationManager:(CLLocationManager *)manager
 	didUpdateToLocation:(CLLocation *)newLocation
 		   fromLocation:(CLLocation *)oldLocation {
+	[manager stopUpdatingLocation];
 	[self.view dismissStaticView];
 	
 	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
@@ -297,6 +315,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager
 	   didFailWithError:(NSError *)error {
+	[manager stopUpdatingLocation];
 	[self.view dismissStaticView];
 }
 
