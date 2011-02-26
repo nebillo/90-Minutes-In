@@ -42,7 +42,7 @@
 - (id)init {
     if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
         // Custom initialization
-		_user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+		_user = [[[NMAuthenticationManager sharedManager] authenticatedUser] retain];
 		
 		_locationManager = [[CLLocationManager alloc] init];
 		[_locationManager setDelegate:self];
