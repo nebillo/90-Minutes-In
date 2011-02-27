@@ -31,5 +31,6 @@ extern NSString * const kUserCellIdentifier;
 @property (nonatomic, retain) IBOutlet UILabel *statusLocation;
 @property (nonatomic, retain) IBOutlet UILabel *statusDate;
 
+- (void)updateStatus;
 
 @end

@@ -10,6 +10,7 @@
 #import "NMUser.h"
 #import "NMStatusUpdate.h"
 #import <Three20UI/TTImageView.h>
+#import <Three20Core/NSDateAdditions.h>
 
 
 const CGFloat kUserCellHeight = 50.0f;
@@ -37,24 +38,35 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 	}
 	
 	[self.userPicture setUrlPath:user.picture];
+	[self updateStatus];
+}
+
+- (void)updateStatus {
+	NMStatusUpdate *status = _user.lastStatus;
 	
-	if (user.lastStatus && !user.lastStatus.expired) {
-		// valid status
-		if ([user.lastStatus.status isEqualToString:kNMStatusIn]) {
-			// green for in
-			[self.statusImage setBackgroundColor:[UIColor greenColor]];
+	if (status) {
+		if (status.expired) {
+			// expired status
+			[self.statusImage setHidden:YES];
+			[self.statusDate setText:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
 		} else {
-			// red for out
-			[self.statusImage setBackgroundColor:[UIColor redColor]];
+			// valid status
+			if ([status.status isEqualToString:kNMStatusIn]) {
+				// green for in
+				[self.statusImage setBackgroundColor:[UIColor greenColor]];
+			} else {
+				// red for out
+				[self.statusImage setBackgroundColor:[UIColor redColor]];
+			}
+			[self.statusImage setHidden:NO];
+			
+			int minutes = ceil(status.remainingTime / 60.0);
+			NSString *format = minutes == 1 ? @"%@ for %d more minute" : @"%@ for %d more minutes";
+			[self.statusDate setText:[NSString stringWithFormat:format, status.status, minutes]];
 		}
-		[self.statusImage setHidden:NO];
-		
-		NSTimeInterval interval = [user.lastStatus.expirationDate timeIntervalSinceNow];
-		int minutes = ceil(interval / 60.0);
-		[self.statusDate setText:[NSString stringWithFormat:@"%@ for %d more minutes", user.lastStatus.status, minutes]];
 		[self.statusDate setHidden:NO];
 	} else {
-		// invalid status
+		// no status
 		[self.statusImage setHidden:YES];
 		[self.statusDate setHidden:YES];
 	}
@@ -70,7 +82,6 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 	self.statusDate = nil;
     [super dealloc];
 }
-
 
 @synthesize user = _user;
 

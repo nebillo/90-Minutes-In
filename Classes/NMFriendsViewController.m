@@ -80,8 +80,8 @@
 	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
 	
 	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
-											  target:self.tableView
-											selector:@selector(reloadData) 
+											  target:self
+											selector:@selector(refreshCells) 
 											userInfo:nil repeats:YES];
 }
 
@@ -119,6 +119,12 @@
 	}
 	
 	[self.tableView reloadData];
+}
+
+
+- (void)refreshCells {
+	NSArray *cells = [self.tableView visibleCells];
+	[cells makeObjectsPerformSelector:@selector(updateStatus)];
 }
 
 
