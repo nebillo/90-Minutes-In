@@ -36,6 +36,7 @@
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 	[button setTitle:@"in" forState:UIControlStateNormal];
 	[button setFrame:CGRectMake(0, 0, 32, 32)];
+	[button setUserInteractionEnabled:NO];
 	return button;
 }
 
@@ -54,6 +55,7 @@
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 	[button setTitle:@"out" forState:UIControlStateNormal];
 	[button setFrame:CGRectMake(0, 0, 32, 32)];
+	[button setUserInteractionEnabled:NO];
 	return button;
 }
 
