@@ -89,6 +89,12 @@ static CLLocationDistance defaultRadius = 5000;
 }
 
 
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[self setClockEnabled:NO];
+}
+
+
 - (void)updateCurrentUserPinAnimated:(BOOL)animated {
 	if ([self.mapView.annotations containsObject:_user]) {
 		[self.mapView removeAnnotation:_user];
@@ -108,8 +114,13 @@ static CLLocationDistance defaultRadius = 5000;
 
 
 - (void)updateUserAnnotationStatusAnimated:(BOOL)animated {
+	// update callout
 	[self.mapView deselectAnnotation:_user animated:NO];
 	[self.mapView selectAnnotation:_user animated:animated];
+	
+	// update annotation
+	NMUserAnnotationView *view = (NMUserAnnotationView *)[self.mapView viewForAnnotation:_user];
+	[view updateStatus];
 }
 
 
@@ -119,18 +130,42 @@ static CLLocationDistance defaultRadius = 5000;
 }
 
 
+- (void)setBarColorWithHue:(CGFloat)hue saturation:(CGFloat)saturation {
+	UIColor *color = [[UIColor alloc] initWithHue:hue 
+									   saturation:saturation 
+									   brightness:0.5 
+											alpha:1.0];
+	[self.navigationController.navigationBar setTintColor:color];
+	[color release];
+}
+
+
 - (void)updateInterface {
 	NMStatusUpdate *status = _user.lastStatus;
 	if (status) {
 		if (_user.lastStatus.expired) {
 			[self.navigationItem setTitle:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
+			[self setBarColorWithHue:1 saturation:0];
 		} else {
 			int minutes = floor(status.remainingTime / 60.0);
 			int seconds = fmod(status.remainingTime, 60.0);
 			[self.navigationItem setTitle:[NSString stringWithFormat:@"%d:%@%d minutes %@", minutes, seconds >= 10 ? @"" : @"0", seconds, status.status]];
+			
+			float hue, saturation;
+			if ([status.status isEqualToString:kNMStatusIn]) {
+				hue = 128.0 / 360.0; // green
+			} else {
+				hue = 360.0 / 360.0; // red
+			}
+			
+			NSTimeInterval elapsed = - [status.createdAt timeIntervalSinceNow];
+			NSTimeInterval total = [status.expirationDate timeIntervalSinceDate:status.createdAt];
+			saturation = 1.0 - elapsed / total;
+			[self setBarColorWithHue:hue saturation:saturation];
 		}
 	} else {
 		[self.navigationItem setTitle:@"You"];
+		[self setBarColorWithHue:1 saturation:0];
 	}
 }
 
@@ -234,6 +269,8 @@ static CLLocationDistance defaultRadius = 5000;
 													 reuseIdentifier:@"user"] autorelease];
 		}
 	}
+	
+	[(NMUserAnnotationView *)view updateStatus];
 	
 	return view;
 }
