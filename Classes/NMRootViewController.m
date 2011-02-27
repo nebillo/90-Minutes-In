@@ -134,12 +134,16 @@ static CLLocationDistance defaultRadius = 10000;
 
 
 - (void)updateFriendsOnMapAnimated:(BOOL)animated {
-	NSMutableArray *annotationsToRemove = [NSMutableArray arrayWithArray:self.mapView.annotations];
+	NSMutableArray *annotationsToRemove = [[NSMutableArray alloc] initWithArray:self.mapView.annotations];
 	[annotationsToRemove removeObject:_user];
-	
 	[self.mapView removeAnnotations:annotationsToRemove];
-	if (_user.friends) {
-		[self.mapView addAnnotations:_user.friends];
+	[annotationsToRemove release];
+	
+	for (NMUser *friend in _user.friends) {
+		if (friend.lastStatus && friend.lastStatus.location) {
+			// registered user with a localized status
+			[self.mapView addAnnotation:friend];
+		}
 	}
 }
 
