@@ -104,7 +104,7 @@
 
 - (NSString *)subtitle {
 	if (!self.lastStatus) {
-		return nil;
+		return @"in or out?";
 	}
 	if (self.lastStatus.expired) {
 		return [NSString stringWithFormat:@"%@ %@", self.lastStatus.status, [self.lastStatus.expirationDate formatRelativeTime]];

@@ -59,6 +59,9 @@
 		3D57B40C130C8ED000073D3C /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B3FF130C8ED000073D3C /* SBJsonBase.m */; };
 		3D57B40D130C8ED000073D3C /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B401130C8ED000073D3C /* SBJsonParser.m */; };
 		3D57B40E130C8ED000073D3C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D57B403130C8ED000073D3C /* SBJsonWriter.m */; };
+		3D804A1D131ACAAF00B37E43 /* mapPin_grey.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D804A1A131ACAAF00B37E43 /* mapPin_grey.png */; };
+		3D804A1E131ACAAF00B37E43 /* mapPin_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D804A1B131ACAAF00B37E43 /* mapPin_green.png */; };
+		3D804A1F131ACAAF00B37E43 /* mapPin_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D804A1C131ACAAF00B37E43 /* mapPin_red.png */; };
 		3DCE95F513145D450005E8F8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCE95F413145D450005E8F8 /* MapKit.framework */; };
 		3DCE966813146C9C0005E8F8 /* NMUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */; };
 		3DCE967F131470AE0005E8F8 /* NMCurrentUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE967E131470AE0005E8F8 /* NMCurrentUserAnnotationView.m */; };
@@ -427,6 +430,9 @@
 		3D57B401130C8ED000073D3C /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
 		3D57B402130C8ED000073D3C /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		3D57B403130C8ED000073D3C /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		3D804A1A131ACAAF00B37E43 /* mapPin_grey.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapPin_grey.png; sourceTree = "<group>"; };
+		3D804A1B131ACAAF00B37E43 /* mapPin_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapPin_green.png; sourceTree = "<group>"; };
+		3D804A1C131ACAAF00B37E43 /* mapPin_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapPin_red.png; sourceTree = "<group>"; };
 		3DCE95F413145D450005E8F8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		3DCE966613146C9C0005E8F8 /* NMUserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMUserAnnotationView.h; sourceTree = "<group>"; };
 		3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUserAnnotationView.m; sourceTree = "<group>"; };
@@ -700,6 +706,9 @@
 		3D2B0B401306D55C002BD38A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				3D804A1A131ACAAF00B37E43 /* mapPin_grey.png */,
+				3D804A1B131ACAAF00B37E43 /* mapPin_green.png */,
+				3D804A1C131ACAAF00B37E43 /* mapPin_red.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1226,6 +1235,9 @@
 				3DE51BF7130F564F004353F3 /* NMUserCell.xib in Resources */,
 				3DEE413B13100F590062AF1E /* NMInfoViewController.xib in Resources */,
 				3D43777B1311593600D13DFC /* NMFriendsViewController.xib in Resources */,
+				3D804A1D131ACAAF00B37E43 /* mapPin_grey.png in Resources */,
+				3D804A1E131ACAAF00B37E43 /* mapPin_green.png in Resources */,
+				3D804A1F131ACAAF00B37E43 /* mapPin_red.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
