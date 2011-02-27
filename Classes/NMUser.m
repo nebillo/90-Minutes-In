@@ -134,6 +134,7 @@
 	self.accessToken = nil;
 	self.lastStatus = nil;
 	self.currentLocation = nil;
+	self.friends = nil;
 	[super dealloc];
 }
 
@@ -150,5 +151,6 @@
 @synthesize lastStatus;
 @synthesize currentLocation;
 @synthesize coordinate;
+@synthesize friends;
 
 @end

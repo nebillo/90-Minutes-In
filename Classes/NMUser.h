@@ -28,6 +28,7 @@
 @property (nonatomic, copy) NSString *picture;
 @property (nonatomic, retain) NMStatusUpdate *lastStatus;
 @property (nonatomic, retain) CLLocation *currentLocation;
+@property (nonatomic, retain) NSArray *friends;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 

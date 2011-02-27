@@ -58,6 +58,9 @@
 	// name ordering
 	[friends sortUsingSelector:@selector(compareWithUser:)];
 	
+	// save friends to user
+	[_user setFriends:friends];
+	
 	return friends;
 }
 @end
