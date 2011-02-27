@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "NMRequest.h"
 
+@class NMUser;
+
 
 @interface NMFriendsViewController : UIViewController <NMRequestDelegate, UITableViewDelegate, UITableViewDataSource>
 {
-	NSArray *_friends;
+	NMUser *_user;
 	NSArray *_filteredFriends;
 	NSUInteger _friendsFilter;
 	NSArray *_tableIndex;

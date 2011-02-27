@@ -22,6 +22,7 @@
 - (id)init {
     if ((self = [super initWithNibName:@"NMFriendsViewController" bundle:nil])) {
         // Custom initialization
+		_user = [[NMAuthenticationManager sharedManager] authenticatedUser];
 		_friendsFilter = 0;
     }
     return self;
@@ -31,7 +32,7 @@
 - (void)filterFriendsWithFilter:(NSString *)filter {
 	NSMutableArray *filtered = [NSMutableArray array];
 	
-	for (NMUser *user in _friends) {
+	for (NMUser *user in _user.friends) {
 		if (!filter || (!user.lastStatus.expired && [user.lastStatus.status isEqualToString:filter])) {
 			[filtered addObject:user];
 		}
@@ -89,7 +90,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	if (_friends) {
+	if (_user.friends) {
 		[self.tableView reloadData];
 	} else {
 		[self updateFriends];
@@ -102,7 +103,7 @@
 	
 	NMFriendsRequest *update = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
-	[update setUser:[[NMAuthenticationManager sharedManager] authenticatedUser]];
+	[update setUser:_user];
 	[update start];
 }
 
@@ -143,8 +144,6 @@
 
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
-	[_friends release];
-	_friends = [response retain];
 	[self filterFriends:self.filterControl];
 	
 	[self.view dismissStaticView];
@@ -219,7 +218,7 @@
 - (void)dealloc {
 	[_clock invalidate];
 	[_filteredFriends release];
-	[_friends release];
+	[_user release];
 	[_tableIndex release];
 	self.tableView = nil;
 	self.filterControl = nil;
