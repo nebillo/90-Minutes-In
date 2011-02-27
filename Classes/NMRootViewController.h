@@ -27,6 +27,7 @@
 
 - (void)updateData;
 - (void)updateUserLocation;
+- (void)updateFriends;
 
 - (IBAction)setStatusIn;
 - (IBAction)setStatusOut;

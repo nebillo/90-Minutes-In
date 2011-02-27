@@ -14,6 +14,7 @@
 
 #import "NMUpdateStatusRequest.h"
 #import "NMGetStatusRequest.h"
+#import "NMFriendsRequest.h"
 
 #import "NMViewExtension.h"
 #import <Three20Core/NSDateAdditions.h>
@@ -30,6 +31,7 @@
 - (void)updateCurrentUserPinAnimated:(BOOL)animated;
 - (void)updateUserAnnotationStatusAnimated:(BOOL)animated;
 - (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated;
+- (void)updateFriendsOnMapAnimated:(BOOL)animated;
 
 - (void)updateInterface;
 - (void)setClockEnabled:(BOOL)enabled;
@@ -66,6 +68,7 @@ static CLLocationDistance defaultRadius = 5000;
 	NMMapOverlay *overlay = [[[NMMapOverlay alloc] init] autorelease];
 	[self.mapView addOverlay:overlay];
 	[self updateCurrentUserPinAnimated:NO];
+	[self updateFriendsOnMapAnimated:NO];
 }
 
 
@@ -80,11 +83,11 @@ static CLLocationDistance defaultRadius = 5000;
 		} else {
 			[self updateUserAnnotationStatusAnimated:NO];
 		}
-
 	} else {
-		// get the status and the location
+		// get the status
 		[self updateData];
 	}
+	
 	[self updateInterface];
 }
 
@@ -127,6 +130,17 @@ static CLLocationDistance defaultRadius = 5000;
 - (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated {
 	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(_user.coordinate, defaultRadius, defaultRadius);
 	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:animated];
+}
+
+
+- (void)updateFriendsOnMapAnimated:(BOOL)animated {
+	NSMutableArray *annotationsToRemove = [NSMutableArray arrayWithArray:self.mapView.annotations];
+	[annotationsToRemove removeObject:_user];
+	
+	[self.mapView removeAnnotations:annotationsToRemove];
+	if (_user.friends) {
+		[self.mapView addAnnotations:_user.friends];
+	}
 }
 
 
@@ -219,12 +233,23 @@ static CLLocationDistance defaultRadius = 5000;
 	[update setDelegate:self];
 	[update setUser:_user];
 	[update start];
+	
+	[self updateFriends];
 }
 
 
 - (void)updateUserLocation {
 	[self.view presentLoadingViewWithTitle:@"Locating…"];
 	[_locationManager startUpdatingLocation];
+}
+
+
+- (void)updateFriends {
+	// get friends
+	NMFriendsRequest *friendsRequest = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
+	[friendsRequest setUser:_user];
+	[friendsRequest setDelegate:self];
+	[friendsRequest start];
 }
 
 
@@ -315,24 +340,24 @@ static CLLocationDistance defaultRadius = 5000;
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		[self.view dismissStaticView];
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
 		[[[[UIAlertView alloc] initWithTitle:@"Cannot update your status" 
 									 message:[error localizedDescription] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		[self.view dismissStaticView];
 	}
-	[self.view dismissStaticView];
 }
 
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
 	
-	NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
-	//[self updateWithStatus:status];
-	[self.view dismissStaticView];
-	
 	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
+		NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
+		[self.view dismissStaticView];
+		
 		// update user annotation
 		[self updateInterface];
 		[self setClockEnabled:YES];
@@ -340,11 +365,15 @@ static CLLocationDistance defaultRadius = 5000;
 		if (!status || status.expired) {
 			[self updateUserLocation];
 		} else {
+			[self updateCurrentUserPinAnimated:YES];
 			[self scrollMapToUserFixedLocationAnimated:YES];
 			[self updateUserAnnotationStatusAnimated:YES];
 		}
 		
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
+		NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
+		[self.view dismissStaticView];
+		
 		// update the annotation
 		[self updateInterface];
 		[self setClockEnabled:YES];
@@ -354,6 +383,10 @@ static CLLocationDistance defaultRadius = 5000;
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		
+	} else if ([request isKindOfClass:[NMFriendsRequest class]]) {
+		// update friends on map
+		[self updateFriendsOnMapAnimated:YES];
 	}
 }
 
