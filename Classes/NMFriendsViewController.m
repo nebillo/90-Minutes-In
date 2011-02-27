@@ -91,7 +91,7 @@
     [super viewWillAppear:animated];
 	
 	if (_user.friends) {
-		[self.tableView reloadData];
+		[self filterFriends:self.filterControl];
 	} else {
 		[self updateFriends];
 	}
