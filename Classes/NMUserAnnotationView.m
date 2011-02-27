@@ -48,8 +48,7 @@
 }
 
 
-- (void)updateStatus {
-	NMUser *user = (NMUser *)self.annotation;
+- (void)updateStatusWithUser:(NMUser *)user {
 	NMStatusUpdate *status = user.lastStatus;
 	
 	[_pictureView setUrlPath:user.picture];
@@ -66,6 +65,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
+	
 	[_selectionMask setHidden:selected];
 }
 

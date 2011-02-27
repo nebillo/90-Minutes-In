@@ -57,7 +57,7 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-static CLLocationDistance defaultRadius = 5000;
+static CLLocationDistance defaultRadius = 10000;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -123,7 +123,7 @@ static CLLocationDistance defaultRadius = 5000;
 	
 	// update annotation
 	NMUserAnnotationView *view = (NMUserAnnotationView *)[self.mapView viewForAnnotation:_user];
-	[view updateStatus];
+	[view updateStatusWithUser:_user];
 }
 
 
@@ -295,7 +295,7 @@ static CLLocationDistance defaultRadius = 5000;
 		}
 	}
 	
-	[(NMUserAnnotationView *)view updateStatus];
+	[(NMUserAnnotationView *)view updateStatusWithUser:user];
 	
 	return view;
 }
@@ -321,7 +321,7 @@ static CLLocationDistance defaultRadius = 5000;
 		MKPolygon *proPolygon = [(NMMapOverlay *)overlay polygon];
 		MKPolygonView *aView = [[[MKPolygonView alloc] initWithPolygon:proPolygon] autorelease];
 	   
-		aView.fillColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+		aView.fillColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
 		//aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
 		//aView.lineWidth = 3;
 		return aView;

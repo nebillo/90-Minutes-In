@@ -9,6 +9,7 @@
 #import <MapKit/MKAnnotationView.h>
 
 @class TTImageView;
+@class NMUser;
 
 
 @interface NMUserAnnotationView : MKAnnotationView 
@@ -18,6 +19,6 @@
 	UIView *_selectionMask;
 }
 
-- (void)updateStatus;
+- (void)updateStatusWithUser:(NMUser *)user;
 
 @end
