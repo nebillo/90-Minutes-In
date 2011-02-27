@@ -26,11 +26,17 @@
 		[_pictureView setClipsToBounds:YES];
 		[_pictureView setContentMode:UIViewContentModeScaleAspectFill];
 		
+		_selectionMask = [[[UIView alloc] initWithFrame:_pictureView.frame] autorelease];
+		[_selectionMask setBackgroundColor:[UIColor blackColor]];
+		[_selectionMask setOpaque:NO];
+		[_selectionMask setAlpha:0.3];
+		
 		_statusFrame = [[[UIImageView alloc] initWithFrame:self.bounds] autorelease];
 		[_statusFrame setOpaque:NO];
 		[_statusFrame setBackgroundColor:[UIColor clearColor]];
 		
 		[self addSubview:_pictureView];
+		[self addSubview:_selectionMask];
 		[self addSubview:_statusFrame];
 	}
 	return self;
@@ -55,6 +61,12 @@
 	} else if ([status.status isEqualToString:kNMStatusOut]) {
 		_statusFrame.image = [UIImage imageNamed:@"mapPin_red.png"];
 	}
+}
+
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+	[super setSelected:selected animated:animated];
+	[_selectionMask setHidden:selected];
 }
 
 

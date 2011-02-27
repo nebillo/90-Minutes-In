@@ -15,6 +15,7 @@
 {
 	UIImageView *_statusFrame;
 	TTImageView *_pictureView;
+	UIView *_selectionMask;
 }
 
 - (void)updateStatus;
