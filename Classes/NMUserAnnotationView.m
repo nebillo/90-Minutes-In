@@ -23,7 +23,7 @@ const NSUInteger kUserAnnotationDetailButton = 10;
 		[self setCanShowCallout:YES];
 		
 		self.frame = CGRectMake(0, 0, 64, 65);
-		self.centerOffset = CGPointMake(0, -12);
+		self.centerOffset = CGPointMake(0, -30);
 		
 		_pictureView = [[[TTImageView alloc] initWithFrame:CGRectMake(10, 11, 44, 33)] autorelease];
 		[_pictureView setClipsToBounds:YES];
