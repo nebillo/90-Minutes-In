@@ -25,6 +25,8 @@
 #import "NMCurrentUserAnnotationView.h"
 #import "NMMapOverlay.h"
 
+#import "NMUserViewController.h"
+
 
 @interface NMRootViewController ()
 
@@ -62,6 +64,10 @@ static CLLocationDistance defaultRadius = 10000;
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	[self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"You" 
+																				style:UIBarButtonItemStyleBordered 
+																			   target:nil 
+																			   action:nil] autorelease]];
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(updateData)] autorelease]];
@@ -306,8 +312,12 @@ static CLLocationDistance defaultRadius = 10000;
 
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+	NMUser *user = (NMUser *)view.annotation;
+	
 	if (control.tag == kUserAnnotationDetailButton) {
-		// TODO: open user
+		// open user
+		NMUserViewController *controller = [[(NMUserViewController *)[NMUserViewController alloc] initWithUser:user] autorelease];
+		[self.navigationController pushViewController:controller animated:YES];
 	} else if (control.tag == kUserAnnotationInButton) {
 		// set in
 		[self setStatusIn];
