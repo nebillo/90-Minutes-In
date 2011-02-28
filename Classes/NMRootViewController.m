@@ -306,11 +306,9 @@ static CLLocationDistance defaultRadius = 10000;
 
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-	if (_user != (NMUser *)(view.annotation)) {
-		return;
-	}
-	
-	if (control.tag == kUserAnnotationInButton) {
+	if (control.tag == kUserAnnotationDetailButton) {
+		// TODO: open user
+	} else if (control.tag == kUserAnnotationInButton) {
 		// set in
 		[self setStatusIn];
 	} else {

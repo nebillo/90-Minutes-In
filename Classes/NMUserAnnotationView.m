@@ -12,6 +12,9 @@
 #import <Three20UI/TTImageView.h>
 
 
+const NSUInteger kUserAnnotationDetailButton = 10;
+
+
 @implementation NMUserAnnotationView
 
 
@@ -76,13 +79,10 @@
 		return nil;
 	}
 	
-	if (![user.lastStatus.status isEqualToString:kNMStatusIn]) {
-		return nil;
-	}
-	
+	// showing an image reflecting last status
 	//FIXME: this should not be an UIControl
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setTitle:@"in" forState:UIControlStateNormal];
+	[button setTitle:user.lastStatus.status forState:UIControlStateNormal];
 	[button setFrame:CGRectMake(0, 0, 32, 32)];
 	[button setUserInteractionEnabled:NO];
 	return button;
@@ -95,15 +95,9 @@
 		return nil;
 	}
 	
-	if (![user.lastStatus.status isEqualToString:kNMStatusOut]) {
-		return nil;
-	}
-	
-	//FIXME: this should not be an UIControl
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setTitle:@"out" forState:UIControlStateNormal];
-	[button setFrame:CGRectMake(0, 0, 32, 32)];
-	[button setUserInteractionEnabled:NO];
+	// showing a detail button
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+	[button setTag:kUserAnnotationDetailButton];
 	return button;
 }
 

@@ -12,6 +12,9 @@
 @class NMUser;
 
 
+extern const NSUInteger kUserAnnotationDetailButton;
+
+
 @interface NMUserAnnotationView : MKAnnotationView 
 {
 	UIImageView *_statusFrame;
