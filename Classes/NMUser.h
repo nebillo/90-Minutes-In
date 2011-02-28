@@ -34,4 +34,6 @@
 
 - (NSComparisonResult)compareWithUser:(NMUser *)user;
 
+- (NSString *)statusDescriptionWithDefaultText:(NSString *)defaultOrNil;
+
 @end

@@ -48,7 +48,6 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 		if (status.expired) {
 			// expired status
 			[self.statusImage setHidden:YES];
-			[self.statusDate setText:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
 		} else {
 			// valid status
 			if ([status.status isEqualToString:kNMStatusIn]) {
@@ -59,10 +58,6 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 				[self.statusImage setBackgroundColor:[UIColor redColor]];
 			}
 			[self.statusImage setHidden:NO];
-			
-			int minutes = ceil(status.remainingTime / 60.0);
-			NSString *format = minutes == 1 ? @"%@ for %d more minute" : @"%@ for %d more minutes";
-			[self.statusDate setText:[NSString stringWithFormat:format, status.status, minutes]];
 		}
 		[self.statusDate setHidden:NO];
 	} else {
@@ -70,6 +65,8 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 		[self.statusImage setHidden:YES];
 		[self.statusDate setHidden:YES];
 	}
+	
+	[self.statusDate setText:[_user statusDescriptionWithDefaultText:nil]];
 }
 
 

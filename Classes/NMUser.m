@@ -50,6 +50,25 @@
 }
 
 
+- (NSString *)statusDescriptionWithDefaultText:(NSString *)defaultOrNil {
+	NMStatusUpdate *status = self.lastStatus;
+	
+	if (!status) {
+		// no status
+		return defaultOrNil;
+	}
+	
+	if (status.expired) {
+		// expired status
+		return [NSString stringWithFormat:@"was %@ %@", status.status, [status.expirationDate formatRelativeTime]];
+	}
+	
+	int minutes = ceil(status.remainingTime / 60.0);
+	NSString *format = minutes == 1 ? @"%@ for %d more minute" : @"%@ for %d more minutes";
+	return [NSString stringWithFormat:format, status.status, minutes];
+}
+
+
 #pragma mark -
 #pragma mark NSCoding
 
@@ -103,19 +122,7 @@
 
 
 - (NSString *)subtitle {
-	if (!self.lastStatus) {
-		return @"in or out?";
-	}
-	if (self.lastStatus.expired) {
-		return [NSString stringWithFormat:@"%@ %@", self.lastStatus.status, [self.lastStatus.expirationDate formatRelativeTime]];
-	}
-	
-	int minutes = ceil(self.lastStatus.remainingTime / 60.0);
-	if (minutes == 1) {
-		return [NSString stringWithFormat:@"about 1 minute %@", self.lastStatus.status];
-	} else {
-		return [NSString stringWithFormat:@"about %d minutes %@", minutes, self.lastStatus.status];
-	}
+	return [self statusDescriptionWithDefaultText:@"in or out?"];
 }
 
 
