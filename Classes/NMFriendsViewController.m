@@ -16,6 +16,8 @@
 #import "NMViewExtension.h"
 #import "NMUserCell.h"
 
+#import "NMUserViewController.h"
+
 
 @implementation NMFriendsViewController
 
@@ -75,6 +77,10 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(updateFriends)] autorelease]];
+	[self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"Friends" 
+																				style:UIBarButtonItemStyleBordered 
+																			   target:nil 
+																			   action:nil] autorelease]];
 	
 	[self.tableView setRowHeight:kUserCellHeight];
 	
@@ -95,6 +101,10 @@
 	} else {
 		[self updateFriends];
 	}
+	
+	[self.navigationController.navigationBar setTintColor:nil];
+	[self.filterControl setTintColor:nil];
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 }
 
 
@@ -178,6 +188,8 @@
     NMUserCell *cell = (NMUserCell *)[tableView dequeueReusableCellWithIdentifier:kUserCellIdentifier];
     if (cell == nil) {
         cell = [NMUserCell cellFromNib];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+		[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
     
 	// Configure the cell.
@@ -192,14 +204,11 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
+	NMUser *user = [[_filteredFriends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	
+	NMUserViewController *detailViewController = [(NMUserViewController *)[NMUserViewController alloc] initWithUser:user];
+	[self.navigationController pushViewController:detailViewController animated:YES];
+	[detailViewController release];
 }
 
 
