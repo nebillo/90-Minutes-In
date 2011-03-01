@@ -82,9 +82,23 @@
 																			   target:nil 
 																			   action:nil] autorelease]];
 	
+	[self.navigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"Map" 
+																				style:UIBarButtonItemStyleBordered 
+																			   target:self 
+																			   action:@selector(changeView:)] autorelease]];
 	[self.tableView setRowHeight:kUserCellHeight];
 	
 	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
+	
+	[self.view setBackgroundColor:[UIColor viewFlipsideBackgroundColor]];
+	
+	if (_showingMap) {
+		[self.mapContainer setFrame:self.contentView.bounds];
+		[self.contentView addSubview:self.mapContainer];
+	} else {
+		[self.tableContainer setFrame:self.contentView.bounds];
+		[self.contentView addSubview:self.tableContainer];
+	}
 	
 	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
 											  target:self
@@ -105,6 +119,40 @@
 	[self.navigationController.navigationBar setTintColor:nil];
 	[self.filterControl setTintColor:nil];
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
+}
+
+
+- (void)showView:(UIView *)destination fromView:(UIView *)origin animation:(UIViewAnimationTransition)transition {
+	[destination setFrame:self.contentView.bounds];
+	
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationTransition:transition forView:self.contentView cache:YES];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+	[UIView setAnimationDuration:0.5];
+	
+	[origin removeFromSuperview];
+	[self.contentView addSubview:destination];
+	
+	[UIView commitAnimations];
+}
+
+
+- (void)changeView:(UIBarButtonItem *)sender {
+	if (_showingMap) {
+		// show list
+		[self showView:self.tableContainer 
+			  fromView:self.mapContainer 
+			 animation:UIViewAnimationTransitionFlipFromLeft];
+		[sender setTitle:@"Map"];
+		_showingMap = NO;
+	} else {
+		// show map
+		[self showView:self.mapContainer 
+			  fromView:self.tableContainer
+			 animation:UIViewAnimationTransitionFlipFromRight];
+		[sender setTitle:@"List"];
+		_showingMap = YES;
+	}
 }
 
 
@@ -130,6 +178,7 @@
 	}
 	
 	[self.tableView reloadData];
+	//TODO: update map view
 }
 
 
@@ -220,6 +269,10 @@
 	_clock = nil;
 	self.tableView = nil;
 	self.filterControl = nil;
+	self.tableContainer = nil;
+	self.mapView = nil;
+	self.mapContainer = nil;
+	self.contentView = nil;
 	[super viewDidUnload];
 }
 
@@ -231,12 +284,21 @@
 	[_tableIndex release];
 	self.tableView = nil;
 	self.filterControl = nil;
+	self.tableContainer = nil;
+	self.mapView = nil;
+	self.mapContainer = nil;
+	self.contentView = nil;
     [super dealloc];
 }
 
 
+@synthesize contentView;
 @synthesize filterControl;
+
+@synthesize tableContainer;
 @synthesize tableView;
 
-@end
+@synthesize mapContainer;
+@synthesize mapView;
 
+@end

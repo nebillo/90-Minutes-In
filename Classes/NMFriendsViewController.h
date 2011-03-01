@@ -10,19 +10,28 @@
 #import "NMRequest.h"
 
 @class NMUser;
+@class MKMapView;
 
 
 @interface NMFriendsViewController : UIViewController <NMRequestDelegate, UITableViewDelegate, UITableViewDataSource>
 {
 	NMUser *_user;
+	NSTimer *_clock;
+	BOOL _showingMap;
 	NSArray *_filteredFriends;
 	NSUInteger _friendsFilter;
+	
 	NSArray *_tableIndex;
-	NSTimer *_clock;
 }
 
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) IBOutlet UIView *contentView;
 @property (nonatomic, retain) IBOutlet UISegmentedControl *filterControl;
+
+@property (nonatomic, retain) IBOutlet UIView *tableContainer;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
+
+@property (nonatomic, retain) IBOutlet UIView *mapContainer;
+@property (nonatomic, retain) IBOutlet MKMapView *mapView;
 
 - (IBAction)updateFriends;
 - (IBAction)filterFriends:(UISegmentedControl *)control;
