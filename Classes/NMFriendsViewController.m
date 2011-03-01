@@ -24,7 +24,7 @@
 - (id)init {
     if ((self = [super initWithNibName:@"NMFriendsViewController" bundle:nil])) {
         // Custom initialization
-		_user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+		_user = [[[NMAuthenticationManager sharedManager] authenticatedUser] retain];
 		_friendsFilter = 0;
     }
     return self;
