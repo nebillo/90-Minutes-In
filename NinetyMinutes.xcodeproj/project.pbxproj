@@ -1425,6 +1425,52 @@
 			};
 			name = Release;
 		};
+		3D4F728E131BE6270081D69A /* Distribuition */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribuition;
+		};
+		3D4F728F131BE6270081D69A /* Distribuition */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = NinetyMinutes_Prefix.pch;
+				HEADER_SEARCH_PATHS = Libraries/Three20/Build/Products/three20;
+				INFOPLIST_FILE = "NinetyMinutes-Info.plist";
+				OTHER_LDFLAGS = (
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20UICommon.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20UINavigator.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20Core.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20UI.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20Network.a",
+					"-force_load",
+					"Libraries/Three20/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/libThree20Style.a",
+				);
+				PRODUCT_NAME = NinetyMinutes;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribuition;
+		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1434,7 +1480,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.2;
 			};
 			name = Debug;
 		};
@@ -1448,7 +1495,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
-				SDKROOT = iphoneos;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.2;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -1460,6 +1509,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				3D4F728F131BE6270081D69A /* Distribuition */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1469,6 +1519,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				3D4F728E131BE6270081D69A /* Distribuition */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
