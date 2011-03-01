@@ -14,6 +14,7 @@
 
 #import "NMUpdateStatusRequest.h"
 #import "NMGetStatusRequest.h"
+#import "NMFriendsRequest.h"
 
 #import "NMViewExtension.h"
 #import <Three20Core/NSDateAdditions.h>
@@ -24,11 +25,18 @@
 #import "NMCurrentUserAnnotationView.h"
 #import "NMMapOverlay.h"
 
+#import "NMUserViewController.h"
+
 
 @interface NMRootViewController ()
 
-- (void)updateWithStatus:(NMStatusUpdate *)status;
-- (void)updateMapView;
+- (void)updateCurrentUserPinAnimated:(BOOL)animated;
+- (void)updateUserAnnotationStatusAnimated:(BOOL)animated;
+- (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated;
+- (void)updateFriendsOnMapAnimated:(BOOL)animated;
+
+- (void)updateInterface;
+- (void)setClockEnabled:(BOOL)enabled;
 
 @end
 
@@ -38,6 +46,8 @@
 - (id)init {
     if ((self = [super initWithNibName:@"NMRootViewController" bundle:nil])) {
         // Custom initialization
+		_user = [[[NMAuthenticationManager sharedManager] authenticatedUser] retain];
+		
 		_locationManager = [[CLLocationManager alloc] init];
 		[_locationManager setDelegate:self];
 		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
@@ -49,51 +59,217 @@
 #pragma mark -
 #pragma mark View lifecycle
 
+static CLLocationDistance defaultRadius = 10000;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	[self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"You" 
+																				style:UIBarButtonItemStyleBordered 
+																			   target:nil 
+																			   action:nil] autorelease]];
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
-																							  action:@selector(getStatus)] autorelease]];
-	[self.mapView addOverlay:[[[NMMapOverlay alloc] init] autorelease]];
-	
-	CLLocationCoordinate2D coordinate;
-	coordinate.latitude = 0;
-	coordinate.longitude = 0;
-	[self.mapView setRegion:MKCoordinateRegionMakeWithDistance(coordinate, 5000, 5000) animated:NO];
-	
-	[self.mapView setZoomEnabled:YES];
+																							  action:@selector(updateData)] autorelease]];
+	NMMapOverlay *overlay = [[[NMMapOverlay alloc] init] autorelease];
+	[self.mapView addOverlay:overlay];
+	[self updateCurrentUserPinAnimated:NO];
+	[self updateFriendsOnMapAnimated:NO];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
+	if (_user.lastStatus) {
+		[self setClockEnabled:YES];
+		
+		if (_user.lastStatus.expired && !_user.currentLocation) {
+			[self updateUserLocation];
+		} else {
+			[self updateUserAnnotationStatusAnimated:NO];
+		}
+	} else {
+		// get the status
+		[self updateData];
+	}
 	
-	[self updateWithStatus:user.lastStatus];
-	[self updateMapView];
+	[self updateInterface];
 }
 
 
-#pragma mark Status
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[self setClockEnabled:NO];
+}
 
-- (IBAction)getStatus {
-	[self.view presentLoadingViewWithTitle:@"Getting your status…"];
+
+- (void)updateCurrentUserPinAnimated:(BOOL)animated {
+	if ([self.mapView.annotations containsObject:_user]) {
+		[self.mapView removeAnnotation:_user];
+	}
+	[self.mapView addAnnotation:_user];
+	
+	[self scrollMapToUserFixedLocationAnimated:animated];
+	
+	if (_user.currentLocation || _user.lastStatus.location) {
+		[self.mapView setScrollEnabled:YES];
+		[self.mapView setZoomEnabled:YES];
+	} else {
+		[self.mapView setScrollEnabled:NO];
+		[self.mapView setZoomEnabled:NO];
+	}
+}
+
+
+- (void)updateUserAnnotationStatusAnimated:(BOOL)animated {
+	// update callout
+	[self.mapView deselectAnnotation:_user animated:NO];
+	[self.mapView selectAnnotation:_user animated:animated];
+	
+	// update annotation
+	NMUserAnnotationView *view = (NMUserAnnotationView *)[self.mapView viewForAnnotation:_user];
+	[view updateStatusWithUser:_user];
+}
+
+
+- (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated {
+	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(_user.coordinate, defaultRadius, defaultRadius);
+	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:animated];
+}
+
+
+- (void)updateFriendsOnMapAnimated:(BOOL)animated {
+	NSMutableArray *annotationsToRemove = [[NSMutableArray alloc] initWithArray:self.mapView.annotations];
+	[annotationsToRemove removeObject:_user];
+	[self.mapView removeAnnotations:annotationsToRemove];
+	[annotationsToRemove release];
+	
+	for (NMUser *friend in _user.friends) {
+		if (friend.lastStatus && friend.lastStatus.location) {
+			// registered user with a localized status
+			[self.mapView addAnnotation:friend];
+		}
+	}
+}
+
+
+- (void)setBarColorWithHue:(CGFloat)hue saturation:(CGFloat)saturation {
+	UIColor *color = [[UIColor alloc] initWithHue:hue 
+									   saturation:saturation 
+									   brightness:0.5 
+											alpha:1.0];
+	[self.navigationController.navigationBar setTintColor:color];
+	[color release];
+}
+
+
+- (void)updateInterface {
+	NMStatusUpdate *status = _user.lastStatus;
+	if (status) {
+		if (_user.lastStatus.expired) {
+			[self.navigationItem setTitle:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
+			[self setBarColorWithHue:1 saturation:0];
+		} else {
+			int minutes = floor(status.remainingTime / 60.0);
+			int seconds = fmod(status.remainingTime, 60.0);
+			[self.navigationItem setTitle:[NSString stringWithFormat:@"%d:%@%d minutes %@", minutes, seconds >= 10 ? @"" : @"0", seconds, status.status]];
+			
+			float hue, saturation;
+			if ([status.status isEqualToString:kNMStatusIn]) {
+				hue = 128.0 / 360.0; // green
+			} else {
+				hue = 360.0 / 360.0; // red
+			}
+			
+			NSTimeInterval elapsed = - [status.createdAt timeIntervalSinceNow];
+			NSTimeInterval total = [status.expirationDate timeIntervalSinceDate:status.createdAt];
+			saturation = 1.0 - elapsed / total;
+			[self setBarColorWithHue:hue saturation:saturation];
+		}
+	} else {
+		[self.navigationItem setTitle:@"You"];
+		[self setBarColorWithHue:1 saturation:0];
+	}
+}
+
+
+- (void)setClockEnabled:(BOOL)enabled {
+	[_clock invalidate];
+	_clock = nil;
+	[_expirationClock invalidate];
+	_expirationClock = nil;
+	
+	if (!enabled || !_user.lastStatus) {
+		return;
+	}
+	
+	if (_user.lastStatus.expired) {
+		_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
+												  target:self 
+												selector:@selector(updateInterface) 
+												userInfo:nil 
+												 repeats:YES];
+	} else {
+		_clock = [NSTimer scheduledTimerWithTimeInterval:1.0 
+												  target:self 
+												selector:@selector(updateInterface) 
+												userInfo:nil 
+												 repeats:YES];
+		_expirationClock = [NSTimer scheduledTimerWithTimeInterval:_user.lastStatus.remainingTime 
+															target:self 
+														  selector:@selector(expires:) 
+														  userInfo:nil 
+														   repeats:NO];
+	}
+}
+
+
+- (void)expires:(NSTimer *)timer {
+	// update the clock
+	[self setClockEnabled:YES];
+	[self updateInterface];
+	[self updateUserAnnotationStatusAnimated:NO];
+	[self updateUserLocation];
+}
+
+
+#pragma mark Actions
+
+- (void)updateData {
+	[self.view presentLoadingViewWithTitle:@"Loading…"];
 	
 	NMGetStatusRequest *update = [[[NMGetStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
-	[update setUser:[[NMAuthenticationManager sharedManager] authenticatedUser]];
+	[update setUser:_user];
 	[update start];
+	
+	[self updateFriends];
+}
+
+
+- (void)updateUserLocation {
+	[self.view presentLoadingViewWithTitle:@"Locating…"];
+	[_locationManager startUpdatingLocation];
+}
+
+
+- (void)updateFriends {
+	// get friends
+	NMFriendsRequest *friendsRequest = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
+	[friendsRequest setUser:_user];
+	[friendsRequest setDelegate:self];
+	[friendsRequest start];
 }
 
 
 - (void)setStatus:(NSString *)status {
-	[self.view presentLoadingViewWithTitle:@"Updating your status…"];
+	[self.view presentLoadingViewWithTitle:@"Updating…"];
 	
 	NMUpdateStatusRequest *update = [[[NMUpdateStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
 	[update setStatus:status];
+	[update setLocation:_user.currentLocation];
 	[update start];
 }
 
@@ -108,113 +284,14 @@
 }
 
 
-- (void)updateRemainingTimeWithStatus:(NMStatusUpdate *)status {
-	int minutes = floor(status.remainingTime / 60.0);
-	int seconds = fmod(status.remainingTime, 60.0);
-	[self setTitle:[NSString stringWithFormat:@"%d:%@%d minutes %@", minutes, seconds >= 10 ? @"" : @"0", seconds, status.status]];
-}
-
-
-- (void)updateLastDateWithStatus:(NMStatusUpdate *)status {
-	[self setTitle:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
-}
-
-
-- (void)updateWithStatus:(NMStatusUpdate *)status {
-	// invalidate timers
-	[_clock invalidate];
-	_clock = nil;
-	[_expirationClock invalidate];
-	_expirationClock = nil;
-	
-	//TODO: update current user annotation
-	
-	if (!status || status.expired) {
-		// no status or status is expired
-		if (status) {
-			[self updateLastDateWithStatus:status];
-			_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
-													  target:self 
-													selector:@selector(lastDateClock:) 
-													userInfo:nil 
-													 repeats:YES];
-		} else {
-			[self setTitle:@"You"];
-		}
-	} else {
-		// there is a valid status
-		[self updateRemainingTimeWithStatus:status];
-		
-		_clock = [NSTimer scheduledTimerWithTimeInterval:1.0 
-												  target:self 
-												selector:@selector(remainingTimeClock:) 
-												userInfo:nil 
-												 repeats:YES];
-		_expirationClock = [NSTimer scheduledTimerWithTimeInterval:status.remainingTime 
-															target:self 
-														  selector:@selector(expires:) 
-														  userInfo:nil 
-														   repeats:NO];
-	}
-}
-
-
-- (void)remainingTimeClock:(NSTimer *)timer {
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	NMStatusUpdate *status = user.lastStatus;
-	[self updateRemainingTimeWithStatus:status];
-}
-
-
-- (void)lastDateClock:(NSTimer *)timer {
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	NMStatusUpdate *status = user.lastStatus;
-	[self updateLastDateWithStatus:status];
-}
-
-
-- (void)expires:(NSTimer *)timer {
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	NMStatusUpdate *status = user.lastStatus;
-	[self updateWithStatus:status];
-	[self updateMapView];
-}
-
-
-#pragma mark Location
-
-
-- (void)getUserLocation {
-	//[self.view presentLoadingViewWithTitle:@"Getting your location…"];
-	[_locationManager startUpdatingLocation];
-}
-
-
-- (void)updateMapView {
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	
-	[self.mapView removeAnnotations:self.mapView.annotations];
-	[self.mapView addAnnotation:user];
-	[self.mapView selectAnnotation:user animated:YES];
-	
-	if (user.currentLocation) {
-		// TODO: add friends
-		// TODO: show an area containing 10 nearest friends
-	} else {
-		[self.mapView setCenterCoordinate:user.coordinate animated:NO];
-	}
-}
-
-
 #pragma mark MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
 	MKAnnotationView *view;
 	
 	NMUser *user = (NMUser *)annotation;
-	NMUser *currentUser = [[NMAuthenticationManager sharedManager] authenticatedUser];
 	
-	if (user == currentUser) {
+	if (user == _user) {
 		view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current-user"];
 		if (!view) {
 			view = [[[NMCurrentUserAnnotationView alloc] initWithAnnotation:annotation 
@@ -228,17 +305,20 @@
 		}
 	}
 	
+	[(NMUserAnnotationView *)view updateStatusWithUser:user];
+	
 	return view;
 }
 
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-	NMUser *currentUser = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	if (currentUser != (NMUser *)(view.annotation)) {
-		return;
-	}
+	NMUser *user = (NMUser *)view.annotation;
 	
-	if (control.tag == kUserAnnotationInButton) {
+	if (control.tag == kUserAnnotationDetailButton) {
+		// open user
+		NMUserViewController *controller = [[(NMUserViewController *)[NMUserViewController alloc] initWithUser:user] autorelease];
+		[self.navigationController pushViewController:controller animated:YES];
+	} else if (control.tag == kUserAnnotationInButton) {
 		// set in
 		[self setStatusIn];
 	} else {
@@ -249,10 +329,16 @@
 
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
-	if (!_overlay) {
-		_overlay = [[NMMapOverlayView alloc] initWithOverlay:overlay];
+    if ([overlay isKindOfClass:[NMMapOverlay class]]) {
+		MKPolygon *proPolygon = [(NMMapOverlay *)overlay polygon];
+		MKPolygonView *aView = [[[MKPolygonView alloc] initWithPolygon:proPolygon] autorelease];
+	   
+		aView.fillColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
+		//aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
+		//aView.lineWidth = 3;
+		return aView;
 	}
-	return _overlay;
+    return nil;
 }
 
 
@@ -261,39 +347,58 @@
 
 - (void)request:(NMRequest *)request didFailWithError:(NSError *)error {
 	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
-		[[[[UIAlertView alloc] initWithTitle:@"Get status error" 
+		[[[[UIAlertView alloc] initWithTitle:@"Cannot get your data" 
 									 message:[error localizedDescription] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		[self.view dismissStaticView];
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
-		[[[[UIAlertView alloc] initWithTitle:@"Update status error" 
+		[[[[UIAlertView alloc] initWithTitle:@"Cannot update your status" 
 									 message:[error localizedDescription] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		[self.view dismissStaticView];
 	}
-	[self.view dismissStaticView];
 }
 
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
 	
-	NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
-	[self updateWithStatus:status];
-	[self.view dismissStaticView];
-	
 	if ([request isKindOfClass:[NMGetStatusRequest class]]) {
-		// get the location
-		[self getUserLocation];
+		NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
+		[self.view dismissStaticView];
+		
+		// update user annotation
+		[self updateInterface];
+		[self setClockEnabled:YES];
+		
+		if (!status || status.expired) {
+			[self updateUserLocation];
+		} else {
+			[self updateCurrentUserPinAnimated:YES];
+			[self scrollMapToUserFixedLocationAnimated:YES];
+			[self updateUserAnnotationStatusAnimated:YES];
+		}
+		
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
+		NMStatusUpdate *status = response == [NSNull null] ? nil : (NMStatusUpdate *)response;
+		[self.view dismissStaticView];
+		
 		// update the annotation
-		[self updateMapView];
+		[self updateInterface];
+		[self setClockEnabled:YES];
+		[self updateUserAnnotationStatusAnimated:YES];
 		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
 									 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
+		
+	} else if ([request isKindOfClass:[NMFriendsRequest class]]) {
+		// update friends on map
+		[self updateFriendsOnMapAnimated:YES];
 	}
 }
 
@@ -305,16 +410,19 @@
 	didUpdateToLocation:(CLLocation *)newLocation
 		   fromLocation:(CLLocation *)oldLocation {
 	[manager stopUpdatingLocation];
+	
 	[self.view dismissStaticView];
 	
-	NMUser *user = [[NMAuthenticationManager sharedManager] authenticatedUser];
-	[user setCurrentLocation:newLocation];
-	[self updateMapView];
+	// updating current location
+	[_user setCurrentLocation:newLocation];
+	[self updateCurrentUserPinAnimated:YES];
+	[self updateUserAnnotationStatusAnimated:YES];
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager
 	   didFailWithError:(NSError *)error {
+	NSLog(@"error updating location: %@", [error localizedDescription]);
 	[manager stopUpdatingLocation];
 	[self.view dismissStaticView];
 }
@@ -324,6 +432,7 @@
 #pragma mark Memory management
 
 - (void)viewDidUnload {
+	[self setClockEnabled:NO];
 	[self.mapView setDelegate:nil];
 	self.mapView = nil;
 	[super viewDidUnload];
@@ -331,6 +440,7 @@
 
 
 - (void)dealloc {
+	[_user release];
 	[_locationManager stopUpdatingLocation];
 	[_locationManager setDelegate:nil];
 	[_locationManager release];

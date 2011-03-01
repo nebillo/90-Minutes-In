@@ -37,7 +37,9 @@
 										  destructiveButtonTitle:@"Logout" 
 											   otherButtonTitles:nil] autorelease];
 	[sheet setActionSheetStyle:UIActionSheetStyleBlackOpaque];
-	[sheet showInView:self.view];
+	
+	UITabBarController *controller = [(NinetyMinutesAppDelegate *)[UIApplication sharedApplication].delegate tabBarController];
+	[sheet showFromTabBar:controller.tabBar];
 }
 
 

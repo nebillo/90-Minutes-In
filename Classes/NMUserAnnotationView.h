@@ -6,11 +6,22 @@
 //  Copyright 2011 Nebil Kriedi. All rights reserved.
 //
 
-#import <MapKit/MKPinAnnotationView.h>
+#import <MapKit/MKAnnotationView.h>
+
+@class TTImageView;
+@class NMUser;
 
 
-@interface NMUserAnnotationView : MKPinAnnotationView 
+extern const NSUInteger kUserAnnotationDetailButton;
+
+
+@interface NMUserAnnotationView : MKAnnotationView 
 {
+	UIImageView *_statusFrame;
+	TTImageView *_pictureView;
+	UIView *_selectionMask;
 }
+
+- (void)updateStatusWithUser:(NMUser *)user;
 
 @end

@@ -107,9 +107,6 @@
 	[infoNav.tabBarItem setTitle:@"More"];
 	
 	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:rootNav, friendsNav, infoNav, nil]];
-	
-	// get the user status
-	[root getStatus];
 }
 
 

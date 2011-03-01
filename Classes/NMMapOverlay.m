@@ -9,52 +9,45 @@
 #import "NMMapOverlay.h"
 #import <MapKit/MapKit.h>
 
-#import <CoreGraphics/CoreGraphics.h>
-
 
 @implementation NMMapOverlay
 
-
-- (CLLocationCoordinate2D)coordinate {
-	// 0,0 coordinate
-	CLLocationCoordinate2D zero;
-	zero.latitude = 0;
-	zero.longitude = 0;
-	return zero;
+- (id)init {
+    if (self = [super init]) {
+        MKMapPoint points[4];
+        CLLocationCoordinate2D c1 = {85,-180.0};
+        points[0] = MKMapPointForCoordinate(c1);
+        CLLocationCoordinate2D c2 = {85,180.0};
+        points[1] = MKMapPointForCoordinate(c2);
+        CLLocationCoordinate2D c3 = {-85,180.0};
+        points[2] = MKMapPointForCoordinate(c3);
+        CLLocationCoordinate2D c4 = {-85,-180.0};
+        points[3] = MKMapPointForCoordinate(c4);
+		
+        self.polygon = [MKPolygon polygonWithPoints:points count:4];
+    }
+    return self;
 }
 
 
 - (MKMapRect)boundingMapRect {
-	// full area
-	MKMapRect rect;
-	MKMapPoint point;
-	MKMapSize size;
+    CLLocationCoordinate2D corner1 = CLLocationCoordinate2DMake(85, -180.0);
+    MKMapPoint mp1 = MKMapPointForCoordinate(corner1);
 	
-	point.x = -180.0;
-	point.y = -90.0;
-	size.width = 320.0;
-	size.height = 180.0;
+    CLLocationCoordinate2D corner2 = CLLocationCoordinate2DMake(-85, 180.0);
+    MKMapPoint mp2 = MKMapPointForCoordinate(corner2);
 	
-	rect.origin = point;
-	rect.size = size;
-	return rect;
+    MKMapRect bounds = MKMapRectMake(mp1.x, mp1.y, (mp2.x-mp1.x), (mp2.y-mp1.y));
+	
+    return bounds;
 }
 
 
-@end
-
-
-@implementation NMMapOverlayView
-
-- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context {
-	CGContextSetAlpha(context, 1.0);
-    CGColorRef color = [UIColor colorWithWhite:1 alpha:1].CGColor;
-    CGContextSetFillColorWithColor(context, color);
-            
-	// Convert the MKMapRect (absolute points on the map proportional to screen points) to
-	// a CGRect (points relative to the origin of this view) that can be drawn.
-	CGRect boundaryCGRect = [self rectForMapRect:mapRect];
-	CGContextFillRect(context, boundaryCGRect);
+- (CLLocationCoordinate2D)coordinate{
+    return CLLocationCoordinate2DMake(0, 0);
 }
+
+
+@synthesize polygon;
 
 @end

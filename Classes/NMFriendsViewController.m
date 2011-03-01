@@ -16,12 +16,15 @@
 #import "NMViewExtension.h"
 #import "NMUserCell.h"
 
+#import "NMUserViewController.h"
+
 
 @implementation NMFriendsViewController
 
 - (id)init {
     if ((self = [super initWithNibName:@"NMFriendsViewController" bundle:nil])) {
         // Custom initialization
+		_user = [[[NMAuthenticationManager sharedManager] authenticatedUser] retain];
 		_friendsFilter = 0;
     }
     return self;
@@ -31,7 +34,7 @@
 - (void)filterFriendsWithFilter:(NSString *)filter {
 	NSMutableArray *filtered = [NSMutableArray array];
 	
-	for (NMUser *user in _friends) {
+	for (NMUser *user in _user.friends) {
 		if (!filter || (!user.lastStatus.expired && [user.lastStatus.status isEqualToString:filter])) {
 			[filtered addObject:user];
 		}
@@ -74,14 +77,18 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(updateFriends)] autorelease]];
+	[self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"Friends" 
+																				style:UIBarButtonItemStyleBordered 
+																			   target:nil 
+																			   action:nil] autorelease]];
 	
 	[self.tableView setRowHeight:kUserCellHeight];
 	
 	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
 	
 	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
-											  target:self.tableView
-											selector:@selector(reloadData) 
+											  target:self
+											selector:@selector(refreshCells) 
 											userInfo:nil repeats:YES];
 }
 
@@ -89,11 +96,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	if (_friends) {
-		[self.tableView reloadData];
+	if (_user.friends) {
+		[self filterFriends:self.filterControl];
 	} else {
 		[self updateFriends];
 	}
+	
+	[self.navigationController.navigationBar setTintColor:nil];
+	[self.filterControl setTintColor:nil];
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 }
 
 
@@ -102,7 +113,7 @@
 	
 	NMFriendsRequest *update = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
-	[update setUser:[[NMAuthenticationManager sharedManager] authenticatedUser]];
+	[update setUser:_user];
 	[update start];
 }
 
@@ -122,6 +133,12 @@
 }
 
 
+- (void)refreshCells {
+	NSArray *cells = [self.tableView visibleCells];
+	[cells makeObjectsPerformSelector:@selector(updateStatus)];
+}
+
+
 #pragma mark -
 #pragma mark NMRequestDelegate
 
@@ -137,8 +154,6 @@
 
 
 - (void)request:(NMRequest *)request didFinishWithResponse:(id)response {
-	[_friends release];
-	_friends = [response retain];
 	[self filterFriends:self.filterControl];
 	
 	[self.view dismissStaticView];
@@ -173,6 +188,8 @@
     NMUserCell *cell = (NMUserCell *)[tableView dequeueReusableCellWithIdentifier:kUserCellIdentifier];
     if (cell == nil) {
         cell = [NMUserCell cellFromNib];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
+		[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
     
 	// Configure the cell.
@@ -187,14 +204,11 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
+	NMUser *user = [[_filteredFriends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	
+	NMUserViewController *detailViewController = [(NMUserViewController *)[NMUserViewController alloc] initWithUser:user];
+	[self.navigationController pushViewController:detailViewController animated:YES];
+	[detailViewController release];
 }
 
 
@@ -213,7 +227,7 @@
 - (void)dealloc {
 	[_clock invalidate];
 	[_filteredFriends release];
-	[_friends release];
+	[_user release];
 	[_tableIndex release];
 	self.tableView = nil;
 	self.filterControl = nil;
