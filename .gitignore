@@ -12,4 +12,4 @@ build
 revision.xcconfig
 
 # external lib
-Libraries/Three20/*
+# Libraries/Three20/*
