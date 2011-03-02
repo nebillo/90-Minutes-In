@@ -8,20 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "NMRequest.h"
+#import <MapKit/MKMapView.h>
 
 @class NMUser;
-@class MKMapView;
 
 
-@interface NMFriendsViewController : UIViewController <NMRequestDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface NMFriendsViewController : UIViewController <NMRequestDelegate, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate>
 {
 	NMUser *_user;
 	NSTimer *_clock;
 	BOOL _showingMap;
-	NSArray *_filteredFriends;
 	NSUInteger _friendsFilter;
 	
+	NSArray *_filteredFriends;
 	NSArray *_tableIndex;
+	
+	NSArray *_mapFilteredFriends;
 }
 
 @property (nonatomic, retain) IBOutlet UIView *contentView;

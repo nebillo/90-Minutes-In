@@ -18,6 +18,9 @@
 
 #import "NMUserViewController.h"
 
+#import "NMUserAnnotationView.h"
+#import <MapKit/MKUserLocation.h>
+
 
 @implementation NMFriendsViewController
 
@@ -33,10 +36,15 @@
 
 - (void)filterFriendsWithFilter:(NSString *)filter {
 	NSMutableArray *filtered = [NSMutableArray array];
+	NSMutableArray *locationOnly = [NSMutableArray array];
 	
 	for (NMUser *user in _user.friends) {
 		if (!filter || (!user.lastStatus.expired && [user.lastStatus.status isEqualToString:filter])) {
 			[filtered addObject:user];
+			
+			if (user.lastStatus.location) {
+				[locationOnly addObject:user];
+			}
 		}
 	}
 	
@@ -64,11 +72,17 @@
 	_filteredFriends = [groups retain];
 	[_tableIndex release];
 	_tableIndex = [indexes retain];
+	
+	[_mapFilteredFriends release];
+	_mapFilteredFriends = [locationOnly retain];
 }
 
 
 #pragma mark -
 #pragma mark View lifecycle
+
+static CLLocationDistance defaultRadius = 10000;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -88,6 +102,12 @@
 																			   action:@selector(changeView:)] autorelease]];
 	[self.tableView setRowHeight:kUserCellHeight];
 	
+	if (_user.currentLocation) {
+		// center map to user location
+		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(_user.currentLocation.coordinate, defaultRadius, defaultRadius);
+		[self.mapView setRegion:[self.mapView regionThatFits:region] animated:NO];
+	}
+	
 	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
 	
 	[self.view setBackgroundColor:[UIColor viewFlipsideBackgroundColor]];
@@ -102,7 +122,7 @@
 	
 	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
 											  target:self
-											selector:@selector(refreshCells) 
+											selector:@selector(refreshInterface) 
 											userInfo:nil repeats:YES];
 }
 
@@ -178,13 +198,26 @@
 	}
 	
 	[self.tableView reloadData];
-	//TODO: update map view
+	
+	NSMutableArray *toRemove = [NSMutableArray arrayWithArray:self.mapView.annotations];
+	if (self.mapView.userLocation) {
+		[toRemove removeObject:self.mapView.userLocation];
+	}
+	[self.mapView removeAnnotations:toRemove];
+	[self.mapView addAnnotations:_mapFilteredFriends];
 }
 
 
-- (void)refreshCells {
+- (void)refreshInterface {
 	NSArray *cells = [self.tableView visibleCells];
 	[cells makeObjectsPerformSelector:@selector(updateStatus)];
+	
+	for (NMUser *user in _mapFilteredFriends) {
+		NMUserAnnotationView *view = (NMUserAnnotationView *)[self.mapView viewForAnnotation:user];
+		if (view) {
+			[view updateStatusWithUser:user];
+		}
+	}
 }
 
 
@@ -262,6 +295,45 @@
 
 
 #pragma mark -
+#pragma mark MKMapViewDelegate
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+	if (annotation == mapView.userLocation) {
+		return nil;
+	}
+	
+	MKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"user"];
+	if (!view) {
+		view = [[[NMUserAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"user"] autorelease];
+	}
+	
+	NMUser *user = (NMUser *)annotation;
+	[(NMUserAnnotationView *)view updateStatusWithUser:user];
+	
+	return view;
+}
+
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+	NMUser *user = (NMUser *)view.annotation;
+	
+	// open user
+	NMUserViewController *controller = [[(NMUserViewController *)[NMUserViewController alloc] initWithUser:user] autorelease];
+	[self.navigationController pushViewController:controller animated:YES];
+}
+
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+	// update user location
+	[_user setCurrentLocation:userLocation.location];
+	
+	// center map to user location
+	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, defaultRadius, defaultRadius);
+	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+}
+
+
+#pragma mark -
 #pragma mark Memory management
 
 - (void)viewDidUnload {
@@ -280,6 +352,7 @@
 - (void)dealloc {
 	[_clock invalidate];
 	[_filteredFriends release];
+	[_mapFilteredFriends release];
 	[_user release];
 	[_tableIndex release];
 	self.tableView = nil;
