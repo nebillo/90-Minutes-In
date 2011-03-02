@@ -14,26 +14,16 @@
 
 #import "NMUpdateStatusRequest.h"
 #import "NMGetStatusRequest.h"
-#import "NMFriendsRequest.h"
 
 #import "NMViewExtension.h"
 #import <Three20Core/NSDateAdditions.h>
 
 #import <CoreLocation/CoreLocation.h>
-#import <MapKit/MapKit.h>
-#import "NMUserAnnotationView.h"
-#import "NMCurrentUserAnnotationView.h"
-#import "NMMapOverlay.h"
 
 #import "NMUserViewController.h"
 
 
 @interface NMRootViewController ()
-
-- (void)updateCurrentUserPinAnimated:(BOOL)animated;
-- (void)updateUserAnnotationStatusAnimated:(BOOL)animated;
-- (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated;
-- (void)updateFriendsOnMapAnimated:(BOOL)animated;
 
 - (void)updateInterface;
 - (void)setClockEnabled:(BOOL)enabled;
@@ -59,8 +49,6 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-static CLLocationDistance defaultRadius = 10000;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -71,10 +59,6 @@ static CLLocationDistance defaultRadius = 10000;
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(updateData)] autorelease]];
-	NMMapOverlay *overlay = [[[NMMapOverlay alloc] init] autorelease];
-	[self.mapView addOverlay:overlay];
-	[self updateCurrentUserPinAnimated:NO];
-	[self updateFriendsOnMapAnimated:NO];
 }
 
 
@@ -86,8 +70,6 @@ static CLLocationDistance defaultRadius = 10000;
 		
 		if (_user.lastStatus.expired && !_user.currentLocation) {
 			[self updateUserLocation];
-		} else {
-			[self updateUserAnnotationStatusAnimated:NO];
 		}
 	} else {
 		// get the status
@@ -101,56 +83,6 @@ static CLLocationDistance defaultRadius = 10000;
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	[self setClockEnabled:NO];
-}
-
-
-- (void)updateCurrentUserPinAnimated:(BOOL)animated {
-	if ([self.mapView.annotations containsObject:_user]) {
-		[self.mapView removeAnnotation:_user];
-	}
-	[self.mapView addAnnotation:_user];
-	
-	[self scrollMapToUserFixedLocationAnimated:animated];
-	
-	if (_user.currentLocation || _user.lastStatus.location) {
-		[self.mapView setScrollEnabled:YES];
-		[self.mapView setZoomEnabled:YES];
-	} else {
-		[self.mapView setScrollEnabled:NO];
-		[self.mapView setZoomEnabled:NO];
-	}
-}
-
-
-- (void)updateUserAnnotationStatusAnimated:(BOOL)animated {
-	// update callout
-	[self.mapView deselectAnnotation:_user animated:NO];
-	[self.mapView selectAnnotation:_user animated:animated];
-	
-	// update annotation
-	NMUserAnnotationView *view = (NMUserAnnotationView *)[self.mapView viewForAnnotation:_user];
-	[view updateStatusWithUser:_user];
-}
-
-
-- (void)scrollMapToUserFixedLocationAnimated:(BOOL)animated {
-	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(_user.coordinate, defaultRadius, defaultRadius);
-	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:animated];
-}
-
-
-- (void)updateFriendsOnMapAnimated:(BOOL)animated {
-	NSMutableArray *annotationsToRemove = [[NSMutableArray alloc] initWithArray:self.mapView.annotations];
-	[annotationsToRemove removeObject:_user];
-	[self.mapView removeAnnotations:annotationsToRemove];
-	[annotationsToRemove release];
-	
-	for (NMUser *friend in _user.friends) {
-		if (friend.lastStatus && friend.lastStatus.location) {
-			// registered user with a localized status
-			[self.mapView addAnnotation:friend];
-		}
-	}
 }
 
 
@@ -229,7 +161,6 @@ static CLLocationDistance defaultRadius = 10000;
 	// update the clock
 	[self setClockEnabled:YES];
 	[self updateInterface];
-	[self updateUserAnnotationStatusAnimated:NO];
 	[self updateUserLocation];
 }
 
@@ -243,23 +174,11 @@ static CLLocationDistance defaultRadius = 10000;
 	[update setDelegate:self];
 	[update setUser:_user];
 	[update start];
-	
-	[self updateFriends];
 }
 
 
 - (void)updateUserLocation {
-	[self.view presentLoadingViewWithTitle:@"Locating…"];
 	[_locationManager startUpdatingLocation];
-}
-
-
-- (void)updateFriends {
-	// get friends
-	NMFriendsRequest *friendsRequest = [[[NMFriendsRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
-	[friendsRequest setUser:_user];
-	[friendsRequest setDelegate:self];
-	[friendsRequest start];
 }
 
 
@@ -281,64 +200,6 @@ static CLLocationDistance defaultRadius = 10000;
 
 - (IBAction)setStatusOut {
 	[self setStatus:kNMStatusOut];
-}
-
-
-#pragma mark MKMapViewDelegate
-
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
-	MKAnnotationView *view;
-	
-	NMUser *user = (NMUser *)annotation;
-	
-	if (user == _user) {
-		view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"current-user"];
-		if (!view) {
-			view = [[[NMCurrentUserAnnotationView alloc] initWithAnnotation:annotation 
-															reuseIdentifier:@"current-user"] autorelease];
-		}
-	} else {
-		view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"user"];
-		if (!view) {
-			view = [[[NMUserAnnotationView alloc] initWithAnnotation:annotation 
-													 reuseIdentifier:@"user"] autorelease];
-		}
-	}
-	
-	[(NMUserAnnotationView *)view updateStatusWithUser:user];
-	
-	return view;
-}
-
-
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-	NMUser *user = (NMUser *)view.annotation;
-	
-	if (control.tag == kUserAnnotationDetailButton) {
-		// open user
-		NMUserViewController *controller = [[(NMUserViewController *)[NMUserViewController alloc] initWithUser:user] autorelease];
-		[self.navigationController pushViewController:controller animated:YES];
-	} else if (control.tag == kUserAnnotationInButton) {
-		// set in
-		[self setStatusIn];
-	} else {
-		// set out
-		[self setStatusOut];
-	}
-}
-
-
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)overlay {
-    if ([overlay isKindOfClass:[NMMapOverlay class]]) {
-		MKPolygon *proPolygon = [(NMMapOverlay *)overlay polygon];
-		MKPolygonView *aView = [[[MKPolygonView alloc] initWithPolygon:proPolygon] autorelease];
-	   
-		aView.fillColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
-		//aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.7];
-		//aView.lineWidth = 3;
-		return aView;
-	}
-    return nil;
 }
 
 
@@ -376,10 +237,6 @@ static CLLocationDistance defaultRadius = 10000;
 		
 		if (!status || status.expired) {
 			[self updateUserLocation];
-		} else {
-			[self updateCurrentUserPinAnimated:YES];
-			[self scrollMapToUserFixedLocationAnimated:YES];
-			[self updateUserAnnotationStatusAnimated:YES];
 		}
 		
 	} else if ([request isKindOfClass:[NMUpdateStatusRequest class]]) {
@@ -389,16 +246,12 @@ static CLLocationDistance defaultRadius = 10000;
 		// update the annotation
 		[self updateInterface];
 		[self setClockEnabled:YES];
-		[self updateUserAnnotationStatusAnimated:YES];
 		[[[[UIAlertView alloc] initWithTitle:@"Status updated" 
 									 message:[NSString stringWithFormat:@"You'll be %@ for 90 minutes", status.status] 
 									delegate:nil 
 						   cancelButtonTitle:@"Ok" 
 						   otherButtonTitles:nil] autorelease] show];
 		
-	} else if ([request isKindOfClass:[NMFriendsRequest class]]) {
-		// update friends on map
-		[self updateFriendsOnMapAnimated:YES];
 	}
 }
 
@@ -409,14 +262,9 @@ static CLLocationDistance defaultRadius = 10000;
 - (void)locationManager:(CLLocationManager *)manager
 	didUpdateToLocation:(CLLocation *)newLocation
 		   fromLocation:(CLLocation *)oldLocation {
-	[manager stopUpdatingLocation];
-	
-	[self.view dismissStaticView];
 	
 	// updating current location
 	[_user setCurrentLocation:newLocation];
-	[self updateCurrentUserPinAnimated:YES];
-	[self updateUserAnnotationStatusAnimated:YES];
 }
 
 
@@ -424,7 +272,6 @@ static CLLocationDistance defaultRadius = 10000;
 	   didFailWithError:(NSError *)error {
 	NSLog(@"error updating location: %@", [error localizedDescription]);
 	[manager stopUpdatingLocation];
-	[self.view dismissStaticView];
 }
 
 
@@ -433,8 +280,6 @@ static CLLocationDistance defaultRadius = 10000;
 
 - (void)viewDidUnload {
 	[self setClockEnabled:NO];
-	[self.mapView setDelegate:nil];
-	self.mapView = nil;
 	[super viewDidUnload];
 }
 
@@ -446,13 +291,8 @@ static CLLocationDistance defaultRadius = 10000;
 	[_locationManager release];
 	[_clock invalidate];
 	[_expirationClock invalidate];
-	[self.mapView setDelegate:nil];
-	self.mapView = nil;
     [super dealloc];
 }
-
-
-@synthesize mapView;
 
 @end
 

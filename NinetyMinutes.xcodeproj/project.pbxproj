@@ -67,7 +67,6 @@
 		3DCE95F513145D450005E8F8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCE95F413145D450005E8F8 /* MapKit.framework */; };
 		3DCE966813146C9C0005E8F8 /* NMUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */; };
 		3DCE967F131470AE0005E8F8 /* NMCurrentUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE967E131470AE0005E8F8 /* NMCurrentUserAnnotationView.m */; };
-		3DCE971A1314843D0005E8F8 /* NMMapOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DCE97191314843D0005E8F8 /* NMMapOverlay.m */; };
 		3DE51954130F3520004353F3 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE5194D130F3520004353F3 /* NSDateAdditions.m */; };
 		3DE51955130F3520004353F3 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE5194F130F3520004353F3 /* NSDictionaryAdditions.m */; };
 		3DE51956130F3520004353F3 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE51951130F3520004353F3 /* NSStringAdditions.m */; };
@@ -443,8 +442,6 @@
 		3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMUserAnnotationView.m; sourceTree = "<group>"; };
 		3DCE967D131470AE0005E8F8 /* NMCurrentUserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMCurrentUserAnnotationView.h; sourceTree = "<group>"; };
 		3DCE967E131470AE0005E8F8 /* NMCurrentUserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMCurrentUserAnnotationView.m; sourceTree = "<group>"; };
-		3DCE97181314843D0005E8F8 /* NMMapOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMMapOverlay.h; sourceTree = "<group>"; };
-		3DCE97191314843D0005E8F8 /* NMMapOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMMapOverlay.m; sourceTree = "<group>"; };
 		3DE5194C130F3520004353F3 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDateAdditions.h; sourceTree = "<group>"; };
 		3DE5194D130F3520004353F3 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDateAdditions.m; sourceTree = "<group>"; };
 		3DE5194E130F3520004353F3 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryAdditions.h; sourceTree = "<group>"; };
@@ -800,12 +797,6 @@
 				28C286DF0D94DF7D0034E888 /* NMRootViewController.h */,
 				28C286E00D94DF7D0034E888 /* NMRootViewController.m */,
 				28F335F01007B36200424DE2 /* NMRootViewController.xib */,
-				3DCE966613146C9C0005E8F8 /* NMUserAnnotationView.h */,
-				3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */,
-				3DCE967D131470AE0005E8F8 /* NMCurrentUserAnnotationView.h */,
-				3DCE967E131470AE0005E8F8 /* NMCurrentUserAnnotationView.m */,
-				3DCE97181314843D0005E8F8 /* NMMapOverlay.h */,
-				3DCE97191314843D0005E8F8 /* NMMapOverlay.m */,
 			);
 			name = Root;
 			sourceTree = "<group>";
@@ -819,6 +810,10 @@
 				3DE51BEF130F552B004353F3 /* NMUserCell.h */,
 				3DE51BF0130F552B004353F3 /* NMUserCell.m */,
 				3DE51BF6130F564F004353F3 /* NMUserCell.xib */,
+				3DCE966613146C9C0005E8F8 /* NMUserAnnotationView.h */,
+				3DCE966713146C9C0005E8F8 /* NMUserAnnotationView.m */,
+				3DCE967D131470AE0005E8F8 /* NMCurrentUserAnnotationView.h */,
+				3DCE967E131470AE0005E8F8 /* NMCurrentUserAnnotationView.m */,
 			);
 			name = Friends;
 			sourceTree = "<group>";
@@ -1318,7 +1313,6 @@
 				3D43777A1311593600D13DFC /* NMFriendsViewController.m in Sources */,
 				3DCE966813146C9C0005E8F8 /* NMUserAnnotationView.m in Sources */,
 				3DCE967F131470AE0005E8F8 /* NMCurrentUserAnnotationView.m in Sources */,
-				3DCE971A1314843D0005E8F8 /* NMMapOverlay.m in Sources */,
 				3D4F71EA131BD54A0081D69A /* NMUserViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
