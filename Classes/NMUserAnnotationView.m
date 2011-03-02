@@ -75,7 +75,7 @@ const NSUInteger kUserAnnotationDetailButton = 10;
 
 - (UIView *)leftCalloutAccessoryView {
 	NMUser *user = (NMUser *)self.annotation;
-	if (!user.lastStatus) {
+	if (!user.lastStatus || user.lastStatus.expired) {
 		return nil;
 	}
 	
@@ -91,7 +91,7 @@ const NSUInteger kUserAnnotationDetailButton = 10;
 
 - (UIView *)rightCalloutAccessoryView {
 	NMUser *user = (NMUser *)self.annotation;
-	if (!user.lastStatus) {
+	if (!user.lastStatus || user.lastStatus.expired) {
 		return nil;
 	}
 	
