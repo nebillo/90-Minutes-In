@@ -113,7 +113,7 @@
 	
 	if (status) {
 		if (_user.lastStatus.expired) {
-			[self.statusLabel setText:[NSString stringWithFormat:@"You were %@ %@", 
+			[self.statusLabel setText:[NSString stringWithFormat:@"you were %@ %@", 
 									   status.status, 
 									   [status.expirationDate formatRelativeTime]]];
 			
@@ -121,7 +121,7 @@
 		} else {
 			int minutes = floor(status.remainingTime / 60.0);
 			int seconds = fmod(status.remainingTime, 60.0);
-			[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d:%@%d minutes", status.status, 
+			[self.statusLabel setText:[NSString stringWithFormat:@"you are %@ for %d:%@%d minutes", status.status, 
 									   minutes, 
 									   seconds >= 10 ? @"" : @"0", seconds]];
 			
