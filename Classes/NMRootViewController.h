@@ -12,6 +12,7 @@
 
 @class NMUser;
 @class CLLocationManager;
+@class TTImageView;
 
 
 @interface NMRootViewController : UIViewController <NMRequestDelegate, CLLocationManagerDelegate>
@@ -26,11 +27,13 @@
 @property (nonatomic, retain) IBOutlet UIButton *outButton;
 @property (nonatomic, retain) IBOutlet UILabel *userLabel;
 @property (nonatomic, retain) IBOutlet UILabel *statusLabel;
+@property (nonatomic, retain) IBOutlet TTImageView *pictureView;
 
 - (void)updateData;
 - (void)updateUserLocation;
 
 - (IBAction)setStatusIn;
 - (IBAction)setStatusOut;
+- (IBAction)showTimeline;
 
 @end

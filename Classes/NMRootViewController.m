@@ -17,10 +17,12 @@
 
 #import "NMViewExtension.h"
 #import <Three20Core/NSDateAdditions.h>
+#import <Three20UI/TTImageView.h>
 
 #import <CoreLocation/CoreLocation.h>
 
 #import "NMUserViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 @interface NMRootViewController ()
@@ -62,6 +64,8 @@
 																							  action:@selector(updateData)] autorelease]];
 	
 	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@!", _user.firstName]];
+	[self.pictureView setUrlPath:_user.picture];
+	[self.pictureView.layer setCornerRadius:8.0f];
 }
 
 
@@ -228,6 +232,13 @@
 }
 
 
+- (IBAction)showTimeline {
+	NMUserViewController *detailViewController = [(NMUserViewController *)[NMUserViewController alloc] initWithUser:_user];
+	[self.navigationController pushViewController:detailViewController animated:YES];
+	[detailViewController release];	
+}
+
+
 #pragma mark -
 #pragma mark NMRequestDelegate
 
@@ -307,6 +318,7 @@
 @synthesize outButton;
 @synthesize userLabel;
 @synthesize statusLabel;
+@synthesize pictureView;
 
 
 - (void)viewDidUnload {
@@ -315,6 +327,7 @@
 	self.outButton = nil;
 	self.statusLabel = nil;
 	self.userLabel = nil;
+	self.pictureView = nil;
 	[super viewDidUnload];
 }
 
@@ -324,6 +337,7 @@
 	self.outButton = nil;
 	self.statusLabel = nil;
 	self.userLabel = nil;
+	self.pictureView = nil;
 	
 	[_user release];
 	[_locationManager stopUpdatingLocation];
