@@ -22,6 +22,11 @@
 	NSTimer *_expirationClock;
 }
 
+@property (nonatomic, retain) IBOutlet UIButton *inButton;
+@property (nonatomic, retain) IBOutlet UIButton *outButton;
+@property (nonatomic, retain) IBOutlet UILabel *userLabel;
+@property (nonatomic, retain) IBOutlet UILabel *statusLabel;
+
 - (void)updateData;
 - (void)updateUserLocation;
 

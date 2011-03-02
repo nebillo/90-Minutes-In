@@ -52,6 +52,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	[self.navigationItem setTitle:@"You"];
 	[self.navigationItem setBackBarButtonItem:[[[UIBarButtonItem alloc] initWithTitle:@"You" 
 																				style:UIBarButtonItemStyleBordered 
 																			   target:nil 
@@ -59,11 +60,15 @@
 	[self.navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
 																							  target:self 
 																							  action:@selector(updateData)] autorelease]];
+	
+	[self.userLabel setText:[NSString stringWithFormat:@"Hi %@!", _user.firstName]];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	
+	[self updateInterface];
 	
 	if (_user.lastStatus) {
 		[self setClockEnabled:YES];
@@ -75,8 +80,6 @@
 		// get the status
 		[self updateData];
 	}
-	
-	[self updateInterface];
 }
 
 
@@ -98,14 +101,25 @@
 
 - (void)updateInterface {
 	NMStatusUpdate *status = _user.lastStatus;
+	
+	[self.inButton setAlpha:1];
+	[self.outButton setAlpha:1];
+	[self.inButton setEnabled:YES];
+	[self.outButton setEnabled:YES];
+	
 	if (status) {
 		if (_user.lastStatus.expired) {
-			[self.navigationItem setTitle:[NSString stringWithFormat:@"%@ %@", status.status, [status.expirationDate formatRelativeTime]]];
+			[self.statusLabel setText:[NSString stringWithFormat:@"You were %@ %@", 
+									   status.status, 
+									   [status.expirationDate formatRelativeTime]]];
+			
 			[self setBarColorWithHue:1 saturation:0];
 		} else {
 			int minutes = floor(status.remainingTime / 60.0);
 			int seconds = fmod(status.remainingTime, 60.0);
-			[self.navigationItem setTitle:[NSString stringWithFormat:@"%d:%@%d minutes %@", minutes, seconds >= 10 ? @"" : @"0", seconds, status.status]];
+			[self.statusLabel setText:[NSString stringWithFormat:@"%@ for %d:%@%d minutes", status.status, 
+									   minutes, 
+									   seconds >= 10 ? @"" : @"0", seconds]];
 			
 			float hue, saturation;
 			if ([status.status isEqualToString:kNMStatusIn]) {
@@ -118,9 +132,17 @@
 			NSTimeInterval total = [status.expirationDate timeIntervalSinceDate:status.createdAt];
 			saturation = 1.0 - elapsed / total;
 			[self setBarColorWithHue:hue saturation:saturation];
+			
+			[self.inButton setEnabled:NO];
+			[self.outButton setEnabled:NO];
+			if ([status.status isEqualToString:kNMStatusIn]) {
+				[self.outButton setAlpha:0.35];
+			} else {
+				[self.inButton setAlpha:0.35];
+			}
 		}
 	} else {
-		[self.navigationItem setTitle:@"You"];
+		[self.statusLabel setText:@"are you in or out?"];
 		[self setBarColorWithHue:1 saturation:0];
 	}
 }
@@ -169,6 +191,9 @@
 
 - (void)updateData {
 	[self.view presentLoadingViewWithTitle:@"Loading…"];
+	
+	[self setClockEnabled:NO];
+	[self.statusLabel setText:@"..."];
 	
 	NMGetStatusRequest *update = [[[NMGetStatusRequest alloc] initWithRootURL:[NSURL URLWithString:kAPIRootURL]] autorelease];
 	[update setDelegate:self];
@@ -278,13 +303,28 @@
 #pragma mark -
 #pragma mark Memory management
 
+@synthesize inButton;
+@synthesize outButton;
+@synthesize userLabel;
+@synthesize statusLabel;
+
+
 - (void)viewDidUnload {
 	[self setClockEnabled:NO];
+	self.inButton = nil;
+	self.outButton = nil;
+	self.statusLabel = nil;
+	self.userLabel = nil;
 	[super viewDidUnload];
 }
 
 
 - (void)dealloc {
+	self.inButton = nil;
+	self.outButton = nil;
+	self.statusLabel = nil;
+	self.userLabel = nil;
+	
 	[_user release];
 	[_locationManager stopUpdatingLocation];
 	[_locationManager setDelegate:nil];
