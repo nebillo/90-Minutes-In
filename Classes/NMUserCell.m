@@ -50,13 +50,8 @@ NSString * const kUserCellIdentifier = @"user_cell_id";
 			[self.statusImage setHidden:YES];
 		} else {
 			// valid status
-			if ([status.status isEqualToString:kNMStatusIn]) {
-				// green for in
-				[self.statusImage setBackgroundColor:[UIColor greenColor]];
-			} else {
-				// red for out
-				[self.statusImage setBackgroundColor:[UIColor redColor]];
-			}
+			NSString *icon = [NSString stringWithFormat:@"userCell_%@.png", status.status];
+			[self.statusImage setImage:[UIImage imageNamed:icon]];
 			[self.statusImage setHidden:NO];
 		}
 		[self.statusDate setHidden:NO];
