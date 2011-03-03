@@ -21,8 +21,6 @@
 	NSUInteger _friendsFilter;
 	
 	NSArray *_filteredFriends;
-	NSArray *_tableIndex;
-	
 	NSArray *_mapFilteredFriends;
 }
 

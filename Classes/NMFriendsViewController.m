@@ -48,30 +48,8 @@
 		}
 	}
 	
-	// group friends by first letter of last name
-	NSMutableArray *groups = [NSMutableArray array];
-	NSMutableArray *indexes = [NSMutableArray array];
-	
-	for (NMUser *user in filtered) {
-		NSString *firstLetter = [user.lastName substringToIndex:1];
-		firstLetter = [firstLetter uppercaseString];
-		
-		if (NSNotFound == [indexes indexOfObject:firstLetter]) {
-			[indexes addObject:firstLetter];
-			NSMutableArray *sectionArray = [NSMutableArray array];
-			[groups addObject:sectionArray];
-			[sectionArray addObject:user];
-		} else {
-			NSMutableArray *sectionArray = [groups lastObject];
-			[sectionArray addObject:user];			
-		}
-		
-	}
-	
 	[_filteredFriends release];
-	_filteredFriends = [groups retain];
-	[_tableIndex release];
-	_tableIndex = [indexes retain];
+	_filteredFriends = [filtered retain];
 	
 	[_mapFilteredFriends release];
 	_mapFilteredFriends = [locationOnly retain];
@@ -249,22 +227,9 @@ static CLLocationDistance defaultRadius = 10000;
 #pragma mark -
 #pragma mark Table view data source
 
-// Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return _filteredFriends.count;
-}
-
-
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSArray *friends = [_filteredFriends objectAtIndex:section];
-	return friends.count;
-}
-
-
-// return list of section titles to display in section index view (e.g. "ABCD...Z#")
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-	return _tableIndex;
+	return _filteredFriends.count;
 }
 
 
@@ -279,7 +244,7 @@ static CLLocationDistance defaultRadius = 10000;
     }
     
 	// Configure the cell.
-	NMUser *friend = [[_filteredFriends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	NMUser *friend = [_filteredFriends objectAtIndex:indexPath.row];
 	[cell setUser:friend];
 	
     return cell;
@@ -290,7 +255,7 @@ static CLLocationDistance defaultRadius = 10000;
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NMUser *user = [[_filteredFriends objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+	NMUser *user = [_filteredFriends objectAtIndex:indexPath.row];
 	
 	NMUserViewController *detailViewController = [(NMUserViewController *)[NMUserViewController alloc] initWithUser:user];
 	[self.navigationController pushViewController:detailViewController animated:YES];
@@ -358,7 +323,6 @@ static CLLocationDistance defaultRadius = 10000;
 	[_filteredFriends release];
 	[_mapFilteredFriends release];
 	[_user release];
-	[_tableIndex release];
 	self.tableView = nil;
 	self.filterControl = nil;
 	self.tableContainer = nil;
