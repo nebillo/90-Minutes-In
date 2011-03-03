@@ -75,6 +75,18 @@ NSString * const kNMStatusIn = @"in";
 }
 
 
+- (NSComparisonResult)compareWithStatus:(NMStatusUpdate *)status {
+	NSComparisonResult creationDateCompare = [self.createdAt compare:status.createdAt];
+	if (creationDateCompare == NSOrderedAscending) {
+		return NSOrderedDescending;
+	}
+	if (creationDateCompare == NSOrderedDescending) {
+		return NSOrderedAscending;
+	}
+	return NSOrderedSame;
+}
+
+
 @synthesize identifier;
 @synthesize status;
 @synthesize createdAt;

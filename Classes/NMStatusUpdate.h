@@ -30,4 +30,6 @@ extern NSString * const kNMStatusIn;
 @property (nonatomic, copy) NSString *address;
 @property (nonatomic, readonly, getter = isExpired) BOOL expired;
 
+- (NSComparisonResult)compareWithStatus:(NMStatusUpdate *)status;
+
 @end

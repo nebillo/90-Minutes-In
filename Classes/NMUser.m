@@ -50,6 +50,24 @@
 }
 
 
+- (NSComparisonResult)compareWithUserByStatus:(NMUser *)user {
+	if (!self.lastStatus && !user.lastStatus) {
+		// both with no status: compare by name
+		return [self compareWithUser:user];
+	}
+	if (!self.lastStatus) {
+		// user with status goes first
+		return NSOrderedAscending;
+	}
+	if (!user.lastStatus) {
+		// user with status goes first
+		return NSOrderedDescending;
+	}
+	// user with most recent status goes first
+	return [self.lastStatus compareWithStatus:user.lastStatus];
+}
+
+
 - (NSString *)statusDescriptionWithDefaultText:(NSString *)defaultOrNil {
 	NMStatusUpdate *status = self.lastStatus;
 	

@@ -56,7 +56,7 @@
 		[friends addObject:user];
 	}
 	// name ordering
-	[friends sortUsingSelector:@selector(compareWithUser:)];
+	[friends sortUsingSelector:@selector(compareWithUserByStatus:)];
 	
 	// save friends to user
 	[_user setFriends:friends];

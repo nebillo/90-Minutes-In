@@ -33,6 +33,7 @@
 - (id)initWithDictionary:(NSDictionary *)dictionary;
 
 - (NSComparisonResult)compareWithUser:(NMUser *)user;
+- (NSComparisonResult)compareWithUserByStatus:(NMUser *)user;
 
 - (NSString *)statusDescriptionWithDefaultText:(NSString *)defaultOrNil;
 
