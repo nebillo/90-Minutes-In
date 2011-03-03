@@ -20,6 +20,7 @@
 
 #import "NMUserAnnotationView.h"
 #import <MapKit/MKUserLocation.h>
+#import <MapKit/MKAnnotation.h>
 
 
 @implementation NMFriendsViewController
@@ -59,9 +60,6 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-static CLLocationDistance defaultRadius = 10000;
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
@@ -78,18 +76,11 @@ static CLLocationDistance defaultRadius = 10000;
 																				style:UIBarButtonItemStyleBordered 
 																			   target:self 
 																			   action:@selector(changeView:)] autorelease]];
+	// setting up views
 	[self.tableView setRowHeight:kUserCellHeight];
-	
-	if (_user.currentLocation) {
-		// center map to user location
-		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(_user.currentLocation.coordinate, defaultRadius, defaultRadius);
-		[self.mapView setRegion:[self.mapView regionThatFits:region] animated:NO];
-	}
-	
-	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
-	
 	[self.view setBackgroundColor:[UIColor viewFlipsideBackgroundColor]];
 	
+	// restoring visible view
 	if (_showingMap) {
 		[self.mapContainer setFrame:self.contentView.bounds];
 		[self.contentView addSubview:self.mapContainer];
@@ -98,6 +89,10 @@ static CLLocationDistance defaultRadius = 10000;
 		[self.contentView addSubview:self.tableContainer];
 	}
 	
+	// restoring filter position and update source
+	[self.filterControl setSelectedSegmentIndex:_friendsFilter];
+	
+	// setup clock
 	_clock = [NSTimer scheduledTimerWithTimeInterval:60.0 
 											  target:self
 											selector:@selector(refreshInterface) 
@@ -108,9 +103,7 @@ static CLLocationDistance defaultRadius = 10000;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	
-	if (_user.friends) {
-		[self filterFriends:self.filterControl];
-	} else {
+	if (!_user.friends) {
 		[self updateFriends];
 	}
 	
@@ -120,6 +113,7 @@ static CLLocationDistance defaultRadius = 10000;
 											alpha:1.0];
 	[self.navigationController.navigationBar setTintColor:color];
 	[self.filterControl setTintColor:color];
+	
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 }
 
@@ -158,6 +152,36 @@ static CLLocationDistance defaultRadius = 10000;
 }
 
 
+- (void)showAllFriendsOnMapAnimated:(BOOL)animated {
+	if (_mapFilteredFriends.count == 0) {
+		return;
+	}
+	
+	double minLat = +90;
+	double maxLat = -90;
+	double minLng = +180;
+	double maxLng = -180;
+	
+	for (id<MKAnnotation> annotation in _mapFilteredFriends) {
+		minLat = MIN(annotation.coordinate.latitude, minLat);
+		maxLat = MAX(annotation.coordinate.latitude, maxLat);
+		minLng = MIN(annotation.coordinate.longitude, minLng);
+		maxLng = MAX(annotation.coordinate.longitude, maxLng);
+	}
+	
+	CLLocationCoordinate2D coordinate;
+	coordinate.latitude = (maxLat + minLat) / 2.0;
+	coordinate.longitude = (maxLng + minLng) / 2.0;
+	
+	MKCoordinateSpan span = MKCoordinateSpanMake(maxLat - minLat, maxLng - minLng);
+	span.latitudeDelta += 0.02;
+	span.longitudeDelta += 0.01;
+	
+	MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);	
+	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:animated];
+}
+
+
 - (IBAction)updateFriends {
 	[self.view presentLoadingViewWithTitle:@"Updating your friends…"];
 	
@@ -187,6 +211,8 @@ static CLLocationDistance defaultRadius = 10000;
 	}
 	[self.mapView removeAnnotations:toRemove];
 	[self.mapView addAnnotations:_mapFilteredFriends];
+	
+	[self showAllFriendsOnMapAnimated:YES];
 }
 
 
@@ -295,10 +321,6 @@ static CLLocationDistance defaultRadius = 10000;
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
 	// update user location
 	[_user setCurrentLocation:userLocation.location];
-	
-	// center map to user location
-	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.location.coordinate, defaultRadius, defaultRadius);
-	[self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
 }
 
 
