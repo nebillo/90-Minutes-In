@@ -107,13 +107,6 @@
 		[self updateFriends];
 	}
 	
-	UIColor *color = [[UIColor alloc] initWithHue:1 
-									   saturation:0 
-									   brightness:0.5 
-											alpha:1.0];
-	[self.navigationController.navigationBar setTintColor:color];
-	[self.filterControl setTintColor:color];
-	
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 }
 

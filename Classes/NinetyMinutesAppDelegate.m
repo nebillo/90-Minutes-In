@@ -84,12 +84,22 @@
 - (void)showLoginController {
 	NMLoginViewController *controller = [[[NMLoginViewController alloc] init] autorelease];
 	UINavigationController *nav = [[[UINavigationController alloc] initWithRootViewController:controller] autorelease];
+	UIColor *color = [[UIColor alloc] initWithHue:1 
+									   saturation:0 
+									   brightness:0.5 
+											alpha:1.0];
+	[nav.navigationBar setTintColor:color];
 	[self.tabBarController presentModalViewController:nav animated:YES];
 }
 
 
 - (void)showRootController {
 	[self.tabBarController setViewControllers:nil];
+	
+	UIColor *color = [[UIColor alloc] initWithHue:1 
+									   saturation:0 
+									   brightness:0.5 
+											alpha:1.0];
 	
 	// status controller
 	NMRootViewController *root = [[(NMRootViewController *)[NMRootViewController alloc] init] autorelease];
@@ -99,11 +109,13 @@
 	// friends controller
 	NMFriendsViewController *friends = [[[NMFriendsViewController alloc] init] autorelease];
 	UINavigationController *friendsNav = [[[UINavigationController alloc] initWithRootViewController:friends] autorelease];
+	[friendsNav.navigationBar setTintColor:color];
 	[friendsNav.tabBarItem setTitle:@"Friends"];
 	
 	// info controller
 	NMInfoViewController *info = [[[NMInfoViewController alloc] init] autorelease];
 	UINavigationController *infoNav = [[[UINavigationController alloc] initWithRootViewController:info] autorelease];
+	[infoNav.navigationBar setTintColor:color];
 	[infoNav.tabBarItem setTitle:@"More"];
 	
 	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:rootNav, friendsNav, infoNav, nil]];
